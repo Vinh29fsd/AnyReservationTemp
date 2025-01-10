@@ -1,0 +1,69 @@
+﻿@page "/orders/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Order</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Order" OnValidSubmit="AddOrder" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="orderdatetime" class="form-label">OrderDateTime:</label> 
+                <InputDate id="orderdatetime" @bind-Value="Order.OrderDateTime" class="form-control" /> 
+                <ValidationMessage For="() => Order.OrderDateTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="productid" class="form-label">ProductId:</label> 
+                <InputNumber id="productid" @bind-Value="Order.ProductId" class="form-control" /> 
+                <ValidationMessage For="() => Order.ProductId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="customerid" class="form-label">CustomerId:</label> 
+                <InputNumber id="customerid" @bind-Value="Order.CustomerId" class="form-control" /> 
+                <ValidationMessage For="() => Order.CustomerId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Order.Name" class="form-control" /> 
+                <ValidationMessage For="() => Order.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact:</label> 
+                <InputText id="contact" @bind-Value="Order.Contact" class="form-control" /> 
+                <ValidationMessage For="() => Order.Contact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="emailaddress" class="form-label">EmailAddress:</label> 
+                <InputText id="emailaddress" @bind-Value="Order.EmailAddress" class="form-control" /> 
+                <ValidationMessage For="() => Order.EmailAddress" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/orders">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Order Order { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddOrder()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Order.Add(Order);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/orders");
+    }
+}

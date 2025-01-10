@@ -1,0 +1,109 @@
+﻿@page "/reservedtabledetails/edit"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>ReservedTableDetail</h2>
+<hr />
+@if (ReservedTableDetail is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="ReservedTableDetail" OnValidSubmit="UpdateReservedTableDetail" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="ReservedTableDetail.Id" value="@ReservedTableDetail.Id" />
+                <div class="mb-3">
+                    <label for="restauranttableid" class="form-label">RestaurantTableId:</label>
+                    <InputNumber id="restauranttableid" @bind-Value="ReservedTableDetail.RestaurantTableId" class="form-control" />
+                    <ValidationMessage For="() => ReservedTableDetail.RestaurantTableId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="reservationid" class="form-label">ReservationId:</label>
+                    <InputNumber id="reservationid" @bind-Value="ReservedTableDetail.ReservationId" class="form-control" />
+                    <ValidationMessage For="() => ReservedTableDetail.ReservationId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="ReservedTableDetail.Name" class="form-control" />
+                    <ValidationMessage For="() => ReservedTableDetail.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Contact:</label>
+                    <InputText id="contact" @bind-Value="ReservedTableDetail.Contact" class="form-control" />
+                    <ValidationMessage For="() => ReservedTableDetail.Contact" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="emailaddress" class="form-label">EmailAddress:</label>
+                    <InputText id="emailaddress" @bind-Value="ReservedTableDetail.EmailAddress" class="form-control" />
+                    <ValidationMessage For="() => ReservedTableDetail.EmailAddress" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/reservedtabledetails">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private ReservedTableDetail? ReservedTableDetail { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        ReservedTableDetail ??= await context.ReservedTableDetail.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (ReservedTableDetail is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateReservedTableDetail()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(ReservedTableDetail!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ReservedTableDetailExists(ReservedTableDetail!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/reservedtabledetails");
+    }
+
+    private bool ReservedTableDetailExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.ReservedTableDetail.Any(e => e.Id == id);
+    }
+}

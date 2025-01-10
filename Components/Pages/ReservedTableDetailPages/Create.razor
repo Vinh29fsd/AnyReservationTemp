@@ -1,0 +1,64 @@
+﻿@page "/reservedtabledetails/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>ReservedTableDetail</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="ReservedTableDetail" OnValidSubmit="AddReservedTableDetail" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="restauranttableid" class="form-label">RestaurantTableId:</label> 
+                <InputNumber id="restauranttableid" @bind-Value="ReservedTableDetail.RestaurantTableId" class="form-control" /> 
+                <ValidationMessage For="() => ReservedTableDetail.RestaurantTableId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="reservationid" class="form-label">ReservationId:</label> 
+                <InputNumber id="reservationid" @bind-Value="ReservedTableDetail.ReservationId" class="form-control" /> 
+                <ValidationMessage For="() => ReservedTableDetail.ReservationId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="ReservedTableDetail.Name" class="form-control" /> 
+                <ValidationMessage For="() => ReservedTableDetail.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact:</label> 
+                <InputText id="contact" @bind-Value="ReservedTableDetail.Contact" class="form-control" /> 
+                <ValidationMessage For="() => ReservedTableDetail.Contact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="emailaddress" class="form-label">EmailAddress:</label> 
+                <InputText id="emailaddress" @bind-Value="ReservedTableDetail.EmailAddress" class="form-control" /> 
+                <ValidationMessage For="() => ReservedTableDetail.EmailAddress" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/reservedtabledetails">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private ReservedTableDetail ReservedTableDetail { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddReservedTableDetail()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.ReservedTableDetail.Add(ReservedTableDetail);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/reservedtabledetails");
+    }
+}

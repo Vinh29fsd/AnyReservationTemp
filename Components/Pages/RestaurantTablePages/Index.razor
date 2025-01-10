@@ -1,0 +1,41 @@
+﻿@page "/restauranttables"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="restauranttables/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.RestaurantTable">
+    <PropertyColumn Property="restauranttable => restauranttable.NumOfSeats" />
+    <PropertyColumn Property="restauranttable => restauranttable.Type" />
+    <PropertyColumn Property="restauranttable => restauranttable.ReservedTableDetailsId" />
+    <PropertyColumn Property="restauranttable => restauranttable.Name" />
+    <PropertyColumn Property="restauranttable => restauranttable.Contact" />
+    <PropertyColumn Property="restauranttable => restauranttable.EmailAddress" />
+
+    <TemplateColumn Context="restauranttable">
+        <a href="@($"restauranttables/edit?id={restauranttable.Id}")">Edit</a> |
+        <a href="@($"restauranttables/details?id={restauranttable.Id}")">Details</a> |
+        <a href="@($"restauranttables/delete?id={restauranttable.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AnyReservationTempContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,40 @@
+﻿@page "/restauranttypes"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="restauranttypes/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.RestaurantType">
+    <PropertyColumn Property="restauranttype => restauranttype.Type" />
+    <PropertyColumn Property="restauranttype => restauranttype.RestaurantId" />
+    <PropertyColumn Property="restauranttype => restauranttype.Name" />
+    <PropertyColumn Property="restauranttype => restauranttype.Contact" />
+    <PropertyColumn Property="restauranttype => restauranttype.EmailAddress" />
+
+    <TemplateColumn Context="restauranttype">
+        <a href="@($"restauranttypes/edit?id={restauranttype.Id}")">Edit</a> |
+        <a href="@($"restauranttypes/details?id={restauranttype.Id}")">Details</a> |
+        <a href="@($"restauranttypes/delete?id={restauranttype.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AnyReservationTempContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

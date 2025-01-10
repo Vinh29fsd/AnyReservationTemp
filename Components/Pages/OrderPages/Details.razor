@@ -1,0 +1,56 @@
+﻿@page "/orders/details"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Order</h2>
+    <hr />
+    @if (order is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">OrderDateTime</dt>
+            <dd class="col-sm-10">@order.OrderDateTime</dd>
+            <dt class="col-sm-2">ProductId</dt>
+            <dd class="col-sm-10">@order.ProductId</dd>
+            <dt class="col-sm-2">CustomerId</dt>
+            <dd class="col-sm-10">@order.CustomerId</dd>
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@order.Name</dd>
+            <dt class="col-sm-2">Contact</dt>
+            <dd class="col-sm-10">@order.Contact</dd>
+            <dt class="col-sm-2">EmailAddress</dt>
+            <dd class="col-sm-10">@order.EmailAddress</dd>
+        </dl>
+        <div>
+            <a href="@($"/orders/edit?id={order.Id}")">Edit</a> |
+            <a href="@($"/orders")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Order? order;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        order = await context.Order.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (order is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

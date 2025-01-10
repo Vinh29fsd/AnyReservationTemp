@@ -1,0 +1,60 @@
+﻿@page "/progresses/details"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Progress</h2>
+    <hr />
+    @if (progress is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@progress.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@progress.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@progress.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@progress.UpdatedBy</dd>
+            <dt class="col-sm-2">StatusId</dt>
+            <dd class="col-sm-10">@progress.StatusId</dd>
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@progress.Name</dd>
+            <dt class="col-sm-2">Contact</dt>
+            <dd class="col-sm-10">@progress.Contact</dd>
+            <dt class="col-sm-2">EmailAddress</dt>
+            <dd class="col-sm-10">@progress.EmailAddress</dd>
+        </dl>
+        <div>
+            <a href="@($"/progresses/edit?id={progress.Id}")">Edit</a> |
+            <a href="@($"/progresses")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Progress? progress;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        progress = await context.Progress.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (progress is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

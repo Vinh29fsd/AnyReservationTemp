@@ -1,0 +1,40 @@
+﻿@page "/reservedtabledetails"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="reservedtabledetails/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.ReservedTableDetail">
+    <PropertyColumn Property="reservedtabledetail => reservedtabledetail.RestaurantTableId" />
+    <PropertyColumn Property="reservedtabledetail => reservedtabledetail.ReservationId" />
+    <PropertyColumn Property="reservedtabledetail => reservedtabledetail.Name" />
+    <PropertyColumn Property="reservedtabledetail => reservedtabledetail.Contact" />
+    <PropertyColumn Property="reservedtabledetail => reservedtabledetail.EmailAddress" />
+
+    <TemplateColumn Context="reservedtabledetail">
+        <a href="@($"reservedtabledetails/edit?id={reservedtabledetail.Id}")">Edit</a> |
+        <a href="@($"reservedtabledetails/details?id={reservedtabledetail.Id}")">Details</a> |
+        <a href="@($"reservedtabledetails/delete?id={reservedtabledetail.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AnyReservationTempContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,124 @@
+﻿@page "/progresses/edit"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Progress</h2>
+<hr />
+@if (Progress is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Progress" OnValidSubmit="UpdateProgress" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Progress.Id" value="@Progress.Id" />
+                <div class="mb-3">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="Progress.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => Progress.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="Progress.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => Progress.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="Progress.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => Progress.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="Progress.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => Progress.UpdatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="statusid" class="form-label">StatusId:</label>
+                    <InputNumber id="statusid" @bind-Value="Progress.StatusId" class="form-control" />
+                    <ValidationMessage For="() => Progress.StatusId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Progress.Name" class="form-control" />
+                    <ValidationMessage For="() => Progress.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Contact:</label>
+                    <InputText id="contact" @bind-Value="Progress.Contact" class="form-control" />
+                    <ValidationMessage For="() => Progress.Contact" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="emailaddress" class="form-label">EmailAddress:</label>
+                    <InputText id="emailaddress" @bind-Value="Progress.EmailAddress" class="form-control" />
+                    <ValidationMessage For="() => Progress.EmailAddress" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/progresses">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Progress? Progress { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Progress ??= await context.Progress.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Progress is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateProgress()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Progress!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ProgressExists(Progress!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/progresses");
+    }
+
+    private bool ProgressExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Progress.Any(e => e.Id == id);
+    }
+}

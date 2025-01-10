@@ -1,0 +1,64 @@
+﻿@page "/staff/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Staff</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Staff" OnValidSubmit="AddStaff" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="nric" class="form-label">NRIC:</label> 
+                <InputText id="nric" @bind-Value="Staff.NRIC" class="form-control" /> 
+                <ValidationMessage For="() => Staff.NRIC" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="restaurantid" class="form-label">RestaurantId:</label> 
+                <InputNumber id="restaurantid" @bind-Value="Staff.RestaurantId" class="form-control" /> 
+                <ValidationMessage For="() => Staff.RestaurantId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Staff.Name" class="form-control" /> 
+                <ValidationMessage For="() => Staff.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact:</label> 
+                <InputText id="contact" @bind-Value="Staff.Contact" class="form-control" /> 
+                <ValidationMessage For="() => Staff.Contact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="emailaddress" class="form-label">EmailAddress:</label> 
+                <InputText id="emailaddress" @bind-Value="Staff.EmailAddress" class="form-control" /> 
+                <ValidationMessage For="() => Staff.EmailAddress" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/staff">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Staff Staff { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddStaff()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Staff.Add(Staff);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/staff");
+    }
+}

@@ -1,0 +1,59 @@
+﻿@page "/restaurants/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Restaurant</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Restaurant" OnValidSubmit="AddRestaurant" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location:</label> 
+                <InputText id="location" @bind-Value="Restaurant.Location" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.Location" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact:</label> 
+                <InputText id="contact" @bind-Value="Restaurant.Contact" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.Contact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="emailaddress" class="form-label">EmailAddress:</label> 
+                <InputText id="emailaddress" @bind-Value="Restaurant.EmailAddress" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.EmailAddress" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/restaurants">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Restaurant Restaurant { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddRestaurant()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Restaurant.Add(Restaurant);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/restaurants");
+    }
+}

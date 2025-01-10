@@ -1,0 +1,56 @@
+﻿@page "/restauranttables/details"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>RestaurantTable</h2>
+    <hr />
+    @if (restauranttable is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">NumOfSeats</dt>
+            <dd class="col-sm-10">@restauranttable.NumOfSeats</dd>
+            <dt class="col-sm-2">Type</dt>
+            <dd class="col-sm-10">@restauranttable.Type</dd>
+            <dt class="col-sm-2">ReservedTableDetailsId</dt>
+            <dd class="col-sm-10">@restauranttable.ReservedTableDetailsId</dd>
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@restauranttable.Name</dd>
+            <dt class="col-sm-2">Contact</dt>
+            <dd class="col-sm-10">@restauranttable.Contact</dd>
+            <dt class="col-sm-2">EmailAddress</dt>
+            <dd class="col-sm-10">@restauranttable.EmailAddress</dd>
+        </dl>
+        <div>
+            <a href="@($"/restauranttables/edit?id={restauranttable.Id}")">Edit</a> |
+            <a href="@($"/restauranttables")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private RestaurantTable? restauranttable;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        restauranttable = await context.RestaurantTable.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (restauranttable is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

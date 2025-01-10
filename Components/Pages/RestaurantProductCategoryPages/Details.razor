@@ -1,0 +1,54 @@
+﻿@page "/restaurantproductcategories/details"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>RestaurantProductCategory</h2>
+    <hr />
+    @if (restaurantproductcategory is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">ProductCategoryId</dt>
+            <dd class="col-sm-10">@restaurantproductcategory.ProductCategoryId</dd>
+            <dt class="col-sm-2">RestaurantId</dt>
+            <dd class="col-sm-10">@restaurantproductcategory.RestaurantId</dd>
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@restaurantproductcategory.Name</dd>
+            <dt class="col-sm-2">Contact</dt>
+            <dd class="col-sm-10">@restaurantproductcategory.Contact</dd>
+            <dt class="col-sm-2">EmailAddress</dt>
+            <dd class="col-sm-10">@restaurantproductcategory.EmailAddress</dd>
+        </dl>
+        <div>
+            <a href="@($"/restaurantproductcategories/edit?id={restaurantproductcategory.Id}")">Edit</a> |
+            <a href="@($"/restaurantproductcategories")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private RestaurantProductCategory? restaurantproductcategory;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        restaurantproductcategory = await context.RestaurantProductCategory.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (restaurantproductcategory is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

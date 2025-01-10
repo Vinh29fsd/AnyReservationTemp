@@ -1,0 +1,46 @@
+﻿@page "/reservations"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="reservations/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Reservation">
+    <PropertyColumn Property="reservation => reservation.NumOfCustomer" />
+    <PropertyColumn Property="reservation => reservation.DateReserved" />
+    <PropertyColumn Property="reservation => reservation.StartTime" />
+    <PropertyColumn Property="reservation => reservation.EndTime" />
+    <PropertyColumn Property="reservation => reservation.RestaurantId" />
+    <PropertyColumn Property="reservation => reservation.CustomerId" />
+    <PropertyColumn Property="reservation => reservation.TableNo" />
+    <PropertyColumn Property="reservation => reservation.ProgressId" />
+    <PropertyColumn Property="reservation => reservation.Name" />
+    <PropertyColumn Property="reservation => reservation.Contact" />
+    <PropertyColumn Property="reservation => reservation.EmailAddress" />
+
+    <TemplateColumn Context="reservation">
+        <a href="@($"reservations/edit?id={reservation.Id}")">Edit</a> |
+        <a href="@($"reservations/details?id={reservation.Id}")">Details</a> |
+        <a href="@($"reservations/delete?id={reservation.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AnyReservationTempContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

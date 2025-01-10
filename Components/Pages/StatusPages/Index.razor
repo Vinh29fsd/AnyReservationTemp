@@ -1,0 +1,39 @@
+﻿@page "/statuses"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="statuses/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Status">
+    <PropertyColumn Property="status => status.Description" />
+    <PropertyColumn Property="status => status.Name" />
+    <PropertyColumn Property="status => status.Contact" />
+    <PropertyColumn Property="status => status.EmailAddress" />
+
+    <TemplateColumn Context="status">
+        <a href="@($"statuses/edit?id={status.Id}")">Edit</a> |
+        <a href="@($"statuses/details?id={status.Id}")">Details</a> |
+        <a href="@($"statuses/delete?id={status.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AnyReservationTempContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
