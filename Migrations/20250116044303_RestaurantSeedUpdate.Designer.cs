@@ -4,6 +4,7 @@ using AnyReservationTemp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnyReservationTemp.Migrations
 {
     [DbContext(typeof(AnyReservationTempContext))]
-    partial class AnyReservationTempContextModelSnapshot : ModelSnapshot
+    [Migration("20250116044303_RestaurantSeedUpdate")]
+    partial class RestaurantSeedUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c49b5b8f-52c2-4847-85c8-b658812c45a6",
+                            ConcurrencyStamp = "6cbbe817-a48b-424e-8a8e-d67ee2d580e1",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +108,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGhAdXsajn3iCStJPMoh73Y7sN12iRGF/M5QQGyEb7+Tsr+gav24srIs8lpz6Skxdw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH/RCVARBXXhnojqe2DAMiFbIa+61EQfpfopPTYcDtGEpMjN98QxwngbPdqpSXYhNg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "918c41c4-c00b-44b5-b470-21292d8d24e5",
+                            SecurityStamp = "f61d578f-5e6b-4ae8-9b57-f3ca40565461",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -361,14 +364,14 @@ namespace AnyReservationTemp.Migrations
                             Id = 1,
                             Contact = "9661 0401",
                             CustomerId = 0,
-                            DateReserved = new DateTime(2025, 1, 17, 13, 13, 54, 554, DateTimeKind.Local).AddTicks(1057),
+                            DateReserved = new DateTime(2025, 1, 16, 12, 43, 2, 211, DateTimeKind.Local).AddTicks(630),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new TimeOnly(13, 13, 54, 554).Add(TimeSpan.FromTicks(1090)),
+                            EndTime = new TimeOnly(12, 43, 2, 211).Add(TimeSpan.FromTicks(653)),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new TimeOnly(13, 13, 54, 554).Add(TimeSpan.FromTicks(1080)),
+                            StartTime = new TimeOnly(12, 43, 2, 211).Add(TimeSpan.FromTicks(646)),
                             TableNo = 0
                         });
                 });
@@ -413,9 +416,6 @@ namespace AnyReservationTemp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")

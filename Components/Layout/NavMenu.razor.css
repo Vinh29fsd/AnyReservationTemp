@@ -17,7 +17,6 @@ body {
 
 .navbar-brand {
     font-size: 1.5rem;
-    color: black;
     background: #ff3535;
     font-family: 'Brush Script MT';
 }
@@ -56,8 +55,16 @@ body {
     .login-button:hover {
         background-color: #34c724;
         color: black;
-        transition: background-color 0.5s ease, color 0.5s ease;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
+
+.button-style {
+    background-color: transparent;
+    border: 2px solid black;
+    padding: .375rem .75rem;
+    cursor: pointer;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out
+}
 
 .nav-link {
     color: #cfcfcf;

@@ -7,32 +7,33 @@
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 
 <PageTitle>Index</PageTitle>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
 
-<h1>Index</h1>
+<body style="background-color: #fff3f1">
+    <h1>Index</h1>
+    <QuickGrid Class="table" Items="context.Reservation">
+        <PropertyColumn Property="reservation => reservation.NumOfCustomer" />
+        <PropertyColumn Property="reservation => reservation.DateReserved" />
+        <PropertyColumn Property="reservation => reservation.StartTime" />
+        <PropertyColumn Property="reservation => reservation.EndTime" />
+        <PropertyColumn Property="reservation => reservation.RestaurantId" />
+        <PropertyColumn Property="reservation => reservation.CustomerId" />
+        <PropertyColumn Property="reservation => reservation.TableNo" />
+        <PropertyColumn Property="reservation => reservation.ProgressId" />
+        <PropertyColumn Property="reservation => reservation.Name" />
+        <PropertyColumn Property="reservation => reservation.Contact" />
+        <PropertyColumn Property="reservation => reservation.EmailAddress" />
 
-<p>
-    <a href="reservations/create">Create New</a>
-</p>
-
-<QuickGrid Class="table" Items="context.Reservation">
-    <PropertyColumn Property="reservation => reservation.NumOfCustomer" />
-    <PropertyColumn Property="reservation => reservation.DateReserved" />
-    <PropertyColumn Property="reservation => reservation.StartTime" />
-    <PropertyColumn Property="reservation => reservation.EndTime" />
-    <PropertyColumn Property="reservation => reservation.RestaurantId" />
-    <PropertyColumn Property="reservation => reservation.CustomerId" />
-    <PropertyColumn Property="reservation => reservation.TableNo" />
-    <PropertyColumn Property="reservation => reservation.ProgressId" />
-    <PropertyColumn Property="reservation => reservation.Name" />
-    <PropertyColumn Property="reservation => reservation.Contact" />
-    <PropertyColumn Property="reservation => reservation.EmailAddress" />
-
-    <TemplateColumn Context="reservation">
-        <a href="@($"reservations/edit?id={reservation.Id}")">Edit</a> |
-        <a href="@($"reservations/details?id={reservation.Id}")">Details</a> |
-        <a href="@($"reservations/delete?id={reservation.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Context="reservation">
+            <a href="@($"reservations/edit?id={reservation.Id}")">Edit</a> |
+            <a href="@($"reservations/details?id={reservation.Id}")">Details</a> |
+            <a href="@($"reservations/delete?id={reservation.Id}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+</body>
 
 @code {
     private AnyReservationTempContext context = default!;

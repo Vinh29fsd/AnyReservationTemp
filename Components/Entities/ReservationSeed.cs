@@ -16,8 +16,8 @@ namespace AnyReservationTemp.Components.Entities
             EmailAddress = "vovinhho@gmail.com",
             NumOfCustomer = 1,
             DateReserved = DateTime.Now,
-            StartTime = DateTime.Now,
-            EndTime = DateTime.Now.AddHours(3),
+            StartTime = TimeOnly.FromDateTime(DateTime.Now),
+            EndTime = TimeOnly.FromDateTime(DateTime.Now),
             }    
             );
         }

@@ -21,6 +21,11 @@
                 <ValidationMessage For="() => Restaurant.Location" class="text-danger" /> 
             </div>        
             <div class="mb-3">
+                <label for="imagepath" class="form-label">ImagePath:</label> 
+                <InputText id="imagepath" @bind-Value="Restaurant.ImagePath" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.ImagePath" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
                 <label for="name" class="form-label">Name:</label> 
                 <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" /> 
                 <ValidationMessage For="() => Restaurant.Name" class="text-danger" /> 

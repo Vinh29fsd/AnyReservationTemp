@@ -34,12 +34,12 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="starttime" class="form-label">StartTime:</label>
-                    <InputDate id="starttime" @bind-Value="Reservation.StartTime" class="form-control" />
+                    <InputDate Type="InputDateType.Time" id="starttime" @bind-Value="Reservation.StartTime" class="form-control" />
                     <ValidationMessage For="() => Reservation.StartTime" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="endtime" class="form-label">EndTime:</label>
-                    <InputDate id="endtime" @bind-Value="Reservation.EndTime" class="form-control" />
+                    <InputDate Type="InputDateType.Time" id="endtime" @bind-Value="Reservation.EndTime" class="form-control" />
                     <ValidationMessage For="() => Reservation.EndTime" class="text-danger" />
                 </div>
                 <div class="mb-3">
