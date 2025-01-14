@@ -1,18 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using AnyReservationTemp.Domain;
+using AnyReservationTemp.Data;
 using AnyReservationTemp.Components.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AnyReservationTemp.Data
 {
-    public class AnyReservationTempContext : DbContext
+    public class AnyReservationTempContext(DbContextOptions<AnyReservationTempContext> options) : IdentityDbContext<AnyReservationTempUser>(options)
     {
-        public AnyReservationTempContext (DbContextOptions<AnyReservationTempContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<AnyReservationTemp.Domain.Customer> Customer { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.Order> Order { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.OrderDetail> OrderDetail { get; set; } = default!;
