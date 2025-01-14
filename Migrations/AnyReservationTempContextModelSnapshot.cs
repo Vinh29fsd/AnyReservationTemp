@@ -106,7 +106,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
 
                     b.HasData(
                         new
@@ -153,7 +153,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.OrderDetail", b =>
@@ -187,7 +187,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderDetail");
+                    b.ToTable("OrderDetail", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Product", b =>
@@ -218,7 +218,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.ProductCategory", b =>
@@ -244,7 +244,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Progress", b =>
@@ -281,7 +281,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Progress");
+                    b.ToTable("Progress", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Reservation", b =>
@@ -327,7 +327,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservation", (string)null);
 
                     b.HasData(
                         new
@@ -372,7 +372,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReservedTableDetail");
+                    b.ToTable("ReservedTableDetail", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Restaurant", b =>
@@ -397,7 +397,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurant");
+                    b.ToTable("Restaurant", (string)null);
 
                     b.HasData(
                         new
@@ -435,7 +435,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RestaurantProductCategory");
+                    b.ToTable("RestaurantProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.RestaurantTable", b =>
@@ -466,7 +466,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RestaurantTable");
+                    b.ToTable("RestaurantTable", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.RestaurantType", b =>
@@ -495,7 +495,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RestaurantType");
+                    b.ToTable("RestaurantType", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Review", b =>
@@ -526,7 +526,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Review");
+                    b.ToTable("Review", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Staff", b =>
@@ -555,7 +555,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Staff");
+                    b.ToTable("Staff", (string)null);
 
                     b.HasData(
                         new
@@ -591,7 +591,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Status");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

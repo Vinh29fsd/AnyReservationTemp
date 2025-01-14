@@ -31,6 +31,9 @@ namespace AnyReservationTemp.Data
             builder.ApplyConfiguration(new StaffSeed());
             builder.ApplyConfiguration(new RestaurantSeed());
             builder.ApplyConfiguration(new ReservationSeed());
+            builder.ApplyConfiguration(new RoleSeed());
+            builder.ApplyConfiguration(new UserSeed());
+            builder.ApplyConfiguration(new UserRoleSeed());
         }
     }
 }

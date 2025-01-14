@@ -1,13 +1,17 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
 }
 
-.content {
-    padding-top: 1.1rem;
+.navbar-content {
+    flex-grow: 1;
 }
 
 h1:focus {
