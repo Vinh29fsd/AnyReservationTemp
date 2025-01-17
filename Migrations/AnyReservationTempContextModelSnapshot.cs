@@ -97,7 +97,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c49b5b8f-52c2-4847-85c8-b658812c45a6",
+                            ConcurrencyStamp = "193d67cb-e6db-45ef-8326-832201fc6568",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +105,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGhAdXsajn3iCStJPMoh73Y7sN12iRGF/M5QQGyEb7+Tsr+gav24srIs8lpz6Skxdw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMYcINUhtWhmj4lNdGduGDP960HEkH/Je2rXWv1CvjLL9/m2IJaKj8/WBzBQAGqrYA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "918c41c4-c00b-44b5-b470-21292d8d24e5",
+                            SecurityStamp = "1ab3c8dd-ba2f-4a20-a9cc-cfbbb3f8b62b",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -330,8 +330,8 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -345,8 +345,8 @@ namespace AnyReservationTemp.Migrations
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TableNo")
                         .HasColumnType("int");
@@ -361,14 +361,14 @@ namespace AnyReservationTemp.Migrations
                             Id = 1,
                             Contact = "9661 0401",
                             CustomerId = 0,
-                            DateReserved = new DateTime(2025, 1, 17, 13, 13, 54, 554, DateTimeKind.Local).AddTicks(1057),
+                            DateReserved = new DateTime(2025, 1, 14, 23, 0, 21, 903, DateTimeKind.Local).AddTicks(7445),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new TimeOnly(13, 13, 54, 554).Add(TimeSpan.FromTicks(1090)),
+                            EndTime = new DateTime(2025, 1, 15, 2, 0, 21, 903, DateTimeKind.Local).AddTicks(7458),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new TimeOnly(13, 13, 54, 554).Add(TimeSpan.FromTicks(1080)),
+                            StartTime = new DateTime(2025, 1, 14, 23, 0, 21, 903, DateTimeKind.Local).AddTicks(7458),
                             TableNo = 0
                         });
                 });
@@ -415,9 +415,6 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -436,38 +433,6 @@ namespace AnyReservationTemp.Migrations
                             EmailAddress = "studentservices@tp.edu.sg",
                             Location = "21 Tampines Ave 4",
                             Name = "BreadBoard"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "Brewing Grounds"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "Wolfgang Puck"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "ShortCircuit"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "The Bistro Bar"
                         });
                 });
 

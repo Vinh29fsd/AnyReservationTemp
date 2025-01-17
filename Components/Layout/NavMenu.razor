@@ -4,7 +4,6 @@
 @inject NavigationManager NavigationManager
 @inject SignInManager<AnyReservationTempUser> SignInManager
 @inject UserManager<AnyReservationTempUser> UserManager
-@inject IHttpContextAccessor HttpContextAccessor
 
 <div class="navbar navbar-expand-lg flex-column p-0" id="navbar" style="width: 100%;">
     <!-- Top Navbar -->
@@ -58,33 +57,12 @@
     </div>
     <!-- Category Select Section -->
     <div class="container-fluid category-container d-flex flex-wrap justify-content-evenly w-100 py-2">
-    <AuthorizeView>
-        <NotAuthorized >
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Category</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">About Us</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Restaurant</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="reservations/create">Reservation</a>
-
-        </NotAuthorized>
-
-        <Authorized>
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Category</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">About Us</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="/restaurants">Restaurant</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="reservations/create">Reservation</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Membership Info</a>
-
-                <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Deals</a>
-
-        </Authorized>
-    </AuthorizeView>
+        <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Category</a>
+        <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">About Us</a>
+        <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Restaurant</a>
+        <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Reservation</a>
+        <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Membership Info</a>
+        <a class="btn category-btn px-4 py-2 m-2 rounded-pill" href="#">Deals</a>
     </div>
 </div>
 <!-- Filler -->
@@ -109,12 +87,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var user = HttpContextAccessor.HttpContext?.User;
-
-        if (user != null && user.Identity?.IsAuthenticated == true)
-        {
-            userEmail = user.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value;
-        }
+        var user = await UserManager.GetUserAsync(SignInManager.Context.User);
+        userEmail = user?.Email;
     }
 }
 
