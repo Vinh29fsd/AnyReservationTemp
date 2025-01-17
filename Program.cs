@@ -34,7 +34,6 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 builder.Services.AddIdentityCore<AnyReservationTempUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AnyReservationTempContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();

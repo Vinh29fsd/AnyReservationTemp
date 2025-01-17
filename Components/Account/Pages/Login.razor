@@ -11,7 +11,6 @@
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Log in</PageTitle>
-<body style="background-color: #fff3f1">
 
 <div class="d-flex justify-content-center align-items-center" style="padding-top: 150px;">
     <div class="col-md-4 mx-auto">
@@ -20,14 +19,15 @@
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
 
-                    <div>
-                        <select class="btn btn-outline-light dropdown-toggle bg-danger text-dark w-100 py-3"
-                                style="font-size: 24px" onchange="this.options[0].style.display = 'none'">
-                            <option value="" disabled selected hidden>AnyReservation</option>
-                            <option value="1" class="dropdown-item text-center">Member</option>
-                            <option value="2" class="dropdown-item text-center">Staff</option>
-                        </select>
-                    </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle bg-danger text-dark w-100 py-3"style="font-size: 24px" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        AnyReservation
+                    </button>
+                    <ul class="dropdown-menu w-100" style="font-size: 22px">
+                        <li><a class="dropdown-item text-center" href="#">Member</a></li>
+                        <li><a class="dropdown-item text-center" href="#">Staff</a></li>
+                    </ul>
+                </div>
 
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
@@ -55,8 +55,7 @@
                         <a href="Account/ForgotPassword">Forgot your password?</a>
                     </p>
                     <p>
-                        <a class="btn category-btn px-4 py-2 m-2 rounded-pill"
-                            href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
                     </p>
                     <p>
                         <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
@@ -67,7 +66,6 @@
     </div>
 </div>
 
-</body>
 @code {
     private string? errorMessage;
 

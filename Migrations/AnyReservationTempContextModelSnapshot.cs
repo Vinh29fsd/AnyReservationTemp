@@ -41,12 +41,6 @@ namespace AnyReservationTemp.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -91,26 +85,6 @@ namespace AnyReservationTemp.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "c49b5b8f-52c2-4847-85c8-b658812c45a6",
-                            Email = "admin@localhost.com",
-                            EmailConfirmed = true,
-                            FirstName = "Admin",
-                            LastName = "User",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@LOCALHOST.COM",
-                            NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGhAdXsajn3iCStJPMoh73Y7sN12iRGF/M5QQGyEb7+Tsr+gav24srIs8lpz6Skxdw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "918c41c4-c00b-44b5-b470-21292d8d24e5",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@localhost.com"
-                        });
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Customer", b =>
@@ -132,7 +106,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
 
                     b.HasData(
                         new
@@ -179,7 +153,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.OrderDetail", b =>
@@ -213,7 +187,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderDetail");
+                    b.ToTable("OrderDetail", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Product", b =>
@@ -244,7 +218,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.ProductCategory", b =>
@@ -270,7 +244,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Progress", b =>
@@ -307,7 +281,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Progress");
+                    b.ToTable("Progress", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Reservation", b =>
@@ -330,8 +304,8 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -345,15 +319,15 @@ namespace AnyReservationTemp.Migrations
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TableNo")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservation", (string)null);
 
                     b.HasData(
                         new
@@ -361,14 +335,14 @@ namespace AnyReservationTemp.Migrations
                             Id = 1,
                             Contact = "9661 0401",
                             CustomerId = 0,
-                            DateReserved = new DateTime(2025, 1, 17, 13, 13, 54, 554, DateTimeKind.Local).AddTicks(1057),
+                            DateReserved = new DateTime(2025, 1, 10, 11, 39, 0, 676, DateTimeKind.Local).AddTicks(1801),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new TimeOnly(13, 13, 54, 554).Add(TimeSpan.FromTicks(1090)),
+                            EndTime = new DateTime(2025, 1, 10, 14, 39, 0, 676, DateTimeKind.Local).AddTicks(1818),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new TimeOnly(13, 13, 54, 554).Add(TimeSpan.FromTicks(1080)),
+                            StartTime = new DateTime(2025, 1, 10, 11, 39, 0, 676, DateTimeKind.Local).AddTicks(1817),
                             TableNo = 0
                         });
                 });
@@ -398,7 +372,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReservedTableDetail");
+                    b.ToTable("ReservedTableDetail", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Restaurant", b =>
@@ -415,9 +389,6 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -426,7 +397,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurant");
+                    b.ToTable("Restaurant", (string)null);
 
                     b.HasData(
                         new
@@ -436,38 +407,6 @@ namespace AnyReservationTemp.Migrations
                             EmailAddress = "studentservices@tp.edu.sg",
                             Location = "21 Tampines Ave 4",
                             Name = "BreadBoard"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "Brewing Grounds"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "Wolfgang Puck"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "ShortCircuit"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Contact = "+65 6780 4191",
-                            EmailAddress = "studentservices@tp.edu.sg",
-                            Location = "21 Tampines Ave 4",
-                            Name = "The Bistro Bar"
                         });
                 });
 
@@ -496,7 +435,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RestaurantProductCategory");
+                    b.ToTable("RestaurantProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.RestaurantTable", b =>
@@ -527,7 +466,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RestaurantTable");
+                    b.ToTable("RestaurantTable", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.RestaurantType", b =>
@@ -556,7 +495,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RestaurantType");
+                    b.ToTable("RestaurantType", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Review", b =>
@@ -587,7 +526,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Review");
+                    b.ToTable("Review", (string)null);
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Staff", b =>
@@ -616,7 +555,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Staff");
+                    b.ToTable("Staff", (string)null);
 
                     b.HasData(
                         new
@@ -652,7 +591,7 @@ namespace AnyReservationTemp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Status");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -680,20 +619,6 @@ namespace AnyReservationTemp.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ad2bcf0c-20db-474f-8407-5a6b159518ba",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "bd2bcf0c-20db-474f-8407-5a6b159518bb",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -781,13 +706,6 @@ namespace AnyReservationTemp.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
-                            RoleId = "ad2bcf0c-20db-474f-8407-5a6b159518ba"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
