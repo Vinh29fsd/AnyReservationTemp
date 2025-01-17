@@ -1,4 +1,9 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@using AnyReservationTemp.Data
+@using Microsoft.AspNetCore.Identity
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject SignInManager<AnyReservationTempUser> SignInManager
+@inject UserManager<AnyReservationTempUser> UserManager
 
 <div class="navbar navbar-expand-lg flex-column p-0" id="navbar" style="width: 100%;">
     <!-- Top Navbar -->
@@ -25,8 +30,30 @@
             </div>
         </div>
 
-        <!-- Login Button -->
-        <a class="btn login-button px-4 py-2 rounded" href="Account/login" role="button">Sign Up/Login</a>
+        <!-- Login Button or User Email -->
+        @if (userEmail is not null)
+        {
+            <div class="login-button px-4 py-2 rounded" style="display: inline-block; cursor: default; margin-right: 10px">
+                @userEmail
+            </div>
+
+            <a class="btn button-style d-flex align-items-center" style="margin: 5px" href="Account/Manage" title="Profile">
+                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+            </a>
+
+            <form action="Account/Logout" method="post" class="d-inline">
+                <AntiforgeryToken />
+                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                <button type="submit" class="btn button-style d-flex align-items-center" title="Logout">
+                    <i class="bi bi-box-arrow-right" style="font-size: 1.5rem;"></i>
+                </button>
+            </form>
+        }
+        else
+        {
+            <a class="btn login-button px-4 py-2 rounded" href="Account/login" role="button">Sign Up/Login</a>
+        }
+
     </div>
     <!-- Category Select Section -->
     <div class="container-fluid category-container d-flex flex-wrap justify-content-evenly w-100 py-2">
@@ -53,3 +80,34 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <script src="NavMenu.js"></script>
+
+
+@code {
+    private string? userEmail;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserManager.GetUserAsync(SignInManager.Context.User);
+        userEmail = user?.Email;
+    }
+}
+
+@code{
+    private string? currentUrl;
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
