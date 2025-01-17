@@ -4,6 +4,108 @@
 <div class="image-container">
     <div class="text-overlay">AnyReservation</div>
 </div>
+@code {
+
+    private string BrandImage1 { get; set; }
+    private string BrandImage2 { get; set; }
+    private string BrandImage3 { get; set; }
+    private string BrandImage4 { get; set; }
+    private string BrandImage5 { get; set; }
+    private string BrandImage6 { get; set; }
+    private string BrandImage7 { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BrandImage1 = "/UI photos/KFC-logo.png";
+        BrandImage2 = "/UI photos/pizza-hut-logo.png";
+        BrandImage3 = "/UI photos/wendys-logo.png";
+        BrandImage4 = "/UI photos/wingstop-logo.png";
+        BrandImage5 = "/UI photos/chipotle-logo.png";
+        BrandImage6 = "/UI photos/restaurant_logo.png";
+        BrandImage7 = "/UI photos/hardees-logo.png";
+
+    }
+}
+<style>
+    .marquee {
+        width: 100vw; /* --marquee-width */
+        height: 20vh; /* --marquee-height */
+        color: #eee;
+        overflow: hidden;
+        position: relative;
+    }
+    .marquee:before,
+    .marquee:after {
+        position: absolute;
+        top: 0;
+        width: 10rem;
+        height: 100%;
+        content: "";
+        z-index: 1;
+    }
+    .marquee:before {
+        left: 0;
+        background: linear-gradient(to right, #f5f5f5 0%, transparent 100%);
+    }
+    .marquee:after {
+        right: 0;
+        background: linear-gradient(to left, #f5f5f5 0%, transparent 100%);
+    }
+    .brand-images-marquee {
+        list-style: none;
+        height: 100%;
+        display: flex;
+        animation: scrolling calc(12 * 3s) linear infinite; /* --marquee-animation-duration */
+    }
+    keyframes scrollLeft {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%); 
+        }
+    }
+    .brand-images-marquee li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        width: calc(100vw / 7); /* --marquee-element-width */
+        max-height: 70px;
+    }
+    }
+    media (max-width: 600px) {
+        html {
+            font-size: 12px;
+        }
+        .marquee {
+            width: 100vw;
+            height: 16vh;
+        }
+        .marquee:before,
+        .marquee:after {
+            width: 5rem;
+        }
+
+        .brand-images-marquee {
+        animation: scrolling calc(3 * 3s) linear infinite;
+        }
+    }
+</style>
+<div class="marquee">
+    <marquee behavior="scroll" direction="left">
+    <ul class="brand-images-marquee">
+        <li><img src="@BrandImage1" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+        <li><img src="@BrandImage2" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+        <li><img src="@BrandImage3" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+        <li><img src="@BrandImage4" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+        <li><img src="@BrandImage5" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+        <li> <img src="@BrandImage6" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+        <li> <img src="@BrandImage7" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+    </ul>
+    </marquee>
+ </div>
+
 
 <body>
    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel tempus odio. Quisque et lacus convallis, volutpat lacus at, ornare tellus. 
