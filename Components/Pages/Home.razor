@@ -5,6 +5,20 @@
     <div class="text-overlay">AnyReservation</div>
 </div>
 
+<div class="marquee" style=" height: 80px">
+    <marquee behavior="scroll" direction="left">
+        <ul class="brand-images-marquee">
+            <li><img src="@BrandImage1" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+            <li><img src="@BrandImage2" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+            <li><img src="@BrandImage3" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+            <li><img src="@BrandImage4" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+            <li><img src="@BrandImage5" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+            <li> <img src="@BrandImage6" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+            <li> <img src="@BrandImage7" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
+        </ul>
+    </marquee>
+</div>
+
 <body>
    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel tempus odio. Quisque et lacus convallis, volutpat lacus at, ornare tellus. 
        
@@ -58,5 +72,26 @@
     <h1> Insert Content</h1>
 </body>
 
+@code {
 
+    private string BrandImage1 { get; set; }
+    private string BrandImage2 { get; set; }
+    private string BrandImage3 { get; set; }
+    private string BrandImage4 { get; set; }
+    private string BrandImage5 { get; set; }
+    private string BrandImage6 { get; set; }
+    private string BrandImage7 { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BrandImage1 = "/UI photos/KFC-logo.png";
+        BrandImage2 = "/UI photos/pizza-hut-logo.png";
+        BrandImage3 = "/UI photos/wendys-logo.png";
+        BrandImage4 = "/UI photos/wingstop-logo.png";
+        BrandImage5 = "/UI photos/chipotle-logo.png";
+        BrandImage6 = "/UI photos/restaurant_logo.png";
+        BrandImage7 = "/UI photos/hardees-logo.png";
+
+    }
+}
 

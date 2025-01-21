@@ -6,40 +6,85 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+@attribute [Authorize(Roles = "Administrator, User")]
+
+<PageTitle>Reservations</PageTitle>
+
 <!-- Filler -->
-<div class="container-fluid d-flex flex-wrap w-100 py-2">
-    <a class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+<div class="container-fluid d-flex flex-wrap w-100 py-3">
+    <a style="color: #fff3f1"class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
 </div>
+<body>
+    @if (isAdmin)
+    {
+        <h1>Customer Reservations</h1>
+    }
+    else
+    {
+        <h1>Your Reservations</h1>
+    }
+    <hr>
 
-<body style="background-color: #fff3f1">
-    <h1>Index</h1>
-    <QuickGrid Class="table" Items="context.Reservation">
-        <PropertyColumn Property="reservation => reservation.NumOfCustomer" />
-        <PropertyColumn Property="reservation => reservation.DateReserved" />
-        <PropertyColumn Property="reservation => reservation.StartTime" />
-        <PropertyColumn Property="reservation => reservation.EndTime" />
-        <PropertyColumn Property="reservation => reservation.RestaurantId" />
-        <PropertyColumn Property="reservation => reservation.CustomerId" />
-        <PropertyColumn Property="reservation => reservation.TableNo" />
-        <PropertyColumn Property="reservation => reservation.ProgressId" />
-        <PropertyColumn Property="reservation => reservation.Name" />
-        <PropertyColumn Property="reservation => reservation.Contact" />
-        <PropertyColumn Property="reservation => reservation.EmailAddress" />
+    <div class="reservation-container">
+        @foreach (var reservation in FilteredReservations.ToList())
+        {
+            <div class="reservation-box">
+                <h3>@reservation.Name</h3>
+                <p><strong>Contact:</strong> @reservation.Contact</p>
+                <p><strong>Email:</strong> @reservation.EmailAddress</p>
+                <p><strong>Date Reserved:</strong> @reservation.DateReserved.ToShortDateString()</p>
+                <p><strong>Start Time:</strong> @reservation.StartTime</p>
+                <p><strong>End Time:</strong> @reservation.EndTime</p>
+                <p hidden><strong>Table No:</strong> @reservation.TableNo</p>
+                <p><strong>Restaurant:</strong> @Restaurants.FirstOrDefault(r => r.Id == reservation.RestaurantId)?.Name </p>
+                <p><strong>Status:</strong> @ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description </p>
+                <p><strong>Date Created:</strong> @reservation.DateCreated</p>
+                <AuthorizeView Roles="Administrator">
+                    <p><strong>Created By:</strong> @reservation.CreatedBy</p>
+                </AuthorizeView>
 
-        <TemplateColumn Context="reservation">
-            <a href="@($"reservations/edit?id={reservation.Id}")">Edit</a> |
-            <a href="@($"reservations/details?id={reservation.Id}")">Details</a> |
-            <a href="@($"reservations/delete?id={reservation.Id}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
+
+                <div class="reservation-actions">
+                    <button class="btn btn-primary" onclick="location.href='@($"reservations/edit?id={reservation.Id}")'">Edit</button>
+                    <button class="btn btn-info" onclick="location.href='@($"reservations/details?id={reservation.Id}")'">Details</button>
+                    @if (isAdmin)
+                    {
+                        <button class="btn btn-secondary btn-danger" onclick="location.href='@($"reservations/delete?id={reservation.Id}")'">Delete</button>
+                    }
+                </div>
+            </div>
+        }
+        <div class="reservation-box create-new-box" onclick="location.href='reservations/create'">
+            <div class="create-new-icon">
+                <span class="plus-icon">+</span>
+            </div>
+        </div>
+    </div>
 </body>
 
 @code {
     private AnyReservationTempContext context = default!;
+    private string userId = string.Empty;
+    private bool isAdmin = false;
 
-    protected override void OnInitialized()
+    private IQueryable<Restaurant> Restaurants => context.Restaurant;
+    private IQueryable<Status> ProgressStatuses => context.Status;
+
+    [Inject]
+    private AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+
+    private IQueryable<Reservation> FilteredReservations => isAdmin
+        ? context.Reservation
+        : context.Reservation.Where(e => e.CreatedBy == userId);
+
+    protected override async void OnInitialized()
     {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        userId = user.FindFirst("userId")?.Value ?? string.Empty;
+        isAdmin = user.IsInRole("Administrator");
+
         context = DbFactory.CreateDbContext();
     }
 

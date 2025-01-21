@@ -1,0 +1,64 @@
+﻿@page "/restaurantproducts/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>RestaurantProduct</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="RestaurantProduct" OnValidSubmit="AddRestaurantProduct" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="productid" class="form-label">ProductId:</label> 
+                <InputNumber id="productid" @bind-Value="RestaurantProduct.ProductId" class="form-control" /> 
+                <ValidationMessage For="() => RestaurantProduct.ProductId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="restaurantid" class="form-label">RestaurantId:</label> 
+                <InputNumber id="restaurantid" @bind-Value="RestaurantProduct.RestaurantId" class="form-control" /> 
+                <ValidationMessage For="() => RestaurantProduct.RestaurantId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="RestaurantProduct.Name" class="form-control" /> 
+                <ValidationMessage For="() => RestaurantProduct.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact:</label> 
+                <InputText id="contact" @bind-Value="RestaurantProduct.Contact" class="form-control" /> 
+                <ValidationMessage For="() => RestaurantProduct.Contact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="emailaddress" class="form-label">EmailAddress:</label> 
+                <InputText id="emailaddress" @bind-Value="RestaurantProduct.EmailAddress" class="form-control" /> 
+                <ValidationMessage For="() => RestaurantProduct.EmailAddress" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/restaurantproducts">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private RestaurantProduct RestaurantProduct { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddRestaurantProduct()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.RestaurantProductCategory.Add(RestaurantProduct);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/restaurantproducts");
+    }
+}

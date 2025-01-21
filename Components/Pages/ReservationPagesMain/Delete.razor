@@ -1,4 +1,4 @@
-﻿@page "/reservations/delete"
+﻿@page "/reservations/delete1"
 @using Microsoft.EntityFrameworkCore
 @using AnyReservationTemp.Domain
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
@@ -50,22 +50,6 @@
         <dl class="row">
             <dt class="col-sm-2">ProgressId</dt>
             <dd class="col-sm-10">@reservation.ProgressId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">DateCreated</dt>
-            <dd class="col-sm-10">@reservation.DateCreated</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">DateUpdated</dt>
-            <dd class="col-sm-10">@reservation.DateUpdated</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@reservation.CreatedBy</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">UpdatedBy</dt>
-            <dd class="col-sm-10">@reservation.UpdatedBy</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">Name</dt>

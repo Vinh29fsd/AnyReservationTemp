@@ -16,7 +16,7 @@ namespace AnyReservationTemp.Data
         public DbSet<AnyReservationTemp.Domain.Reservation> Reservation { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.ReservedTableDetail> ReservedTableDetail { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.Restaurant> Restaurant { get; set; } = default!;
-        public DbSet<AnyReservationTemp.Domain.RestaurantProductCategory> RestaurantProductCategory { get; set; } = default!;
+        public DbSet<AnyReservationTemp.Domain.RestaurantProduct> RestaurantProductCategory { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.RestaurantTable> RestaurantTable { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.RestaurantType> RestaurantType { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.Review> Review { get; set; } = default!;
@@ -34,6 +34,9 @@ namespace AnyReservationTemp.Data
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new UserRoleSeed());
+            builder.ApplyConfiguration(new StatusSeed());
+            builder.ApplyConfiguration(new ProductSeed());
+            builder.ApplyConfiguration(new ProductCategorySeed());
         }
     }
 }

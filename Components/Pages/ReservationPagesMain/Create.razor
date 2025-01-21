@@ -1,4 +1,4 @@
-﻿@page "/reservations/create"
+﻿@page "/reservations/create1"
 @using AnyReservationTemp.Data
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
@@ -11,7 +11,7 @@
 
 <!-- Filler -->
 <div class="container-fluid d-flex flex-wrap w-100 py-2">
-    <a style="color: #fff3f1" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+    <a class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
 </div>
 <body style="background-color: #fff3f1">
     <h1>Create</h1>
@@ -20,11 +20,6 @@
     <div>
         @if (AuthCheck)
         {
-            <div>
-                <a href="/reservations" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Back
-                </a>
-            </div>
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-4">
                     <div class="row d-flex justify-content-center align-items-center mb-4">
@@ -36,7 +31,7 @@
                             </button>
                         </div>
                     </div>
-                    <EditForm method="post" Model   ="Reservation" OnValidSubmit="AddReservation" FormName="create" Enhance>
+                    <EditForm method="post" Model="Reservation" OnValidSubmit="AddReservation" FormName="create" Enhance>
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger" role="alert" />
                         <div class="mb-3">
@@ -52,6 +47,10 @@
                                 }
                             </InputSelect>
                             <ValidationMessage For="() => Reservation.RestaurantId" class="text-danger" />
+                        </div>
+                        <div>
+                            <!-- Temporary Food Order Modal -->
+                            <button class="btn btn-primary bg-success w-100">Food Order Modal</button>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name:</label>
@@ -105,6 +104,11 @@
                             <ValidationMessage For="() => Reservation.TableNo" class="text-danger" />
                         </div>
                         <div class="mb-3" hidden>
+                            <label for="progressid" class="form-label">ProgressId:</label>
+                            <InputNumber id="progressid" @bind-Value="Reservation.ProgressId" class="form-control" />
+                            <ValidationMessage For="() => Reservation.ProgressId" class="text-danger" />
+                        </div>
+                        <div class="mb-3" hidden>
                             <label for="datecreated" class="form-label">DateCreated:</label>
                             <InputDate id="datecreated" @bind-Value="Reservation.DateCreated" class="form-control" />
                             <ValidationMessage For="() => Reservation.DateCreated" class="text-danger" />
@@ -124,25 +128,6 @@
                             <InputText id="updatedby" @bind-Value="Reservation.UpdatedBy" class="form-control" />
                             <ValidationMessage For="() => Reservation.UpdatedBy" class="text-danger" />
                         </div>
-                        @if (isAdmin)
-                        {
-                            <div class="mb-3">
-                                <label class="form-label">Status:</label>
-                                <InputSelect id="statusid" @bind-Value="Reservation.ProgressId" class="form-control">
-                                    <option value="">-- Status --</option>
-                                    @if (Status != null)
-                                    {
-                                        foreach (var status in Status)
-                                        {
-                                            <option value="@status.Id">
-                                                @status.Description
-                                            </option>
-                                        }
-                                    }
-                                </InputSelect>
-                                <ValidationMessage For="() => Reservation.ProgressId" class="text-danger" />
-                            </div>
-                        }
                         <div>
                             <button type="submit" class="btn btn-primary bg-success w-100" href="/">Reserve Now</button>
                         </div>
@@ -165,57 +150,27 @@
 @code {
     [SupplyParameterFromForm]
     private Reservation Reservation { get; set; } = new();
-
-    private bool isAdmin = false;
-
     //Declare and initialize
     private AnyReservationTempContext context = default!;
     private IList<Restaurant> Restaurants;
-    private IList<Status> Status;
+    private IList<Customer> Customers;
+    private IList<Progress> Status;
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddReservation()
     {
         using var context = DbFactory.CreateDbContext();
-
-        Reservation.ProgressId = 2;
-
-        Reservation.CreatedBy = userId;
-        Reservation.UpdatedBy = userId;
-
-        Reservation.DateCreated = DateTime.Now;
-        Reservation.DateUpdated = DateTime.Now;
-
         context.Reservation.Add(Reservation);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo($"/reservations/details?id={Reservation.Id}");
+        NavigationManager.NavigateTo("/");
     }
 
-    //Create userId string to store the user id, default value is "System".
-    private string userId = "System";
-
-    //Inject the AuthenticationStateProvider to get the user id.
-    @inject AuthenticationStateProvider authenticationStateProvider
-
-    protected override async void OnInitialized()
+    protected override void OnInitialized()
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        isAdmin = user.IsInRole("Administrator");
-
-        // Get the userId claim
-        var userIdClaim = user.FindFirst("userId");
-        if (userIdClaim != null)
-        {
-            userId = userIdClaim.Value;
-        }
-
         context = DbFactory.CreateDbContext();
         Restaurants = context.Restaurant.ToList();
-        Status = context.Status.ToList();
-
-        Reservation.ProgressId = 2;
+        Customers = context.Customer.ToList();
+        Status = context.Progress.ToList();
     }
 }
 

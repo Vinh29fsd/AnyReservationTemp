@@ -1,74 +1,76 @@
 ﻿@page "/orderdetails/create"
+@layout MinimalLayout
+
 @using Microsoft.EntityFrameworkCore
 @using AnyReservationTemp.Domain
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 @inject NavigationManager NavigationManager
-
 <PageTitle>Create</PageTitle>
+<body style=" background-color: #fff3f1">
+    <h1>Create</h1>
 
-<h1>Create</h1>
-
-<h2>OrderDetail</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="OrderDetail" OnValidSubmit="AddOrderDetail" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="quantity" class="form-label">Quantity:</label> 
-                <InputNumber id="quantity" @bind-Value="OrderDetail.Quantity" class="form-control" /> 
-                <ValidationMessage For="() => OrderDetail.Quantity" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="totalamount" class="form-label">TotalAmount:</label> 
-                <InputNumber id="totalamount" @bind-Value="OrderDetail.TotalAmount" class="form-control" /> 
-                <ValidationMessage For="() => OrderDetail.TotalAmount" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="orderid" class="form-label">OrderId:</label> 
-                <InputNumber id="orderid" @bind-Value="OrderDetail.OrderId" class="form-control" /> 
-                <ValidationMessage For="() => OrderDetail.OrderId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="productid" class="form-label">ProductId:</label> 
-                <InputNumber id="productid" @bind-Value="OrderDetail.ProductId" class="form-control" /> 
-                <ValidationMessage For="() => OrderDetail.ProductId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="name" class="form-label">Name:</label> 
-                <InputText id="name" @bind-Value="OrderDetail.Name" class="form-control" /> 
-                <ValidationMessage For="() => OrderDetail.Name" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="contact" class="form-label">Contact:</label> 
-                <InputText id="contact" @bind-Value="OrderDetail.Contact" class="form-control" /> 
-                <ValidationMessage For="() => OrderDetail.Contact" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="emailaddress" class="form-label">EmailAddress:</label> 
-                <InputText id="emailaddress" @bind-Value="OrderDetail.EmailAddress" class="form-control" /> 
-                <ValidationMessage For="() => OrderDetail.EmailAddress" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
+    <h2>OrderDetail</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="OrderDetail" OnValidSubmit="AddOrderDetail" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity:</label>
+                    <InputNumber id="quantity" @bind-Value="OrderDetail.Quantity" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.Quantity" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="totalamount" class="form-label">TotalAmount:</label>
+                    <InputNumber id="totalamount" @bind-Value="OrderDetail.TotalAmount" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.TotalAmount" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="reservationid" class="form-label">ReservationId:</label>
+                    <InputNumber id="reservationid" @bind-Value="OrderDetail.ReservationId" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.ReservationId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="productid" class="form-label">ProductId:</label>
+                    <InputNumber id="productid" @bind-Value="OrderDetail.ProductId" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.ProductId" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="OrderDetail.Name" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.Name" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="contact" class="form-label">Contact:</label>
+                    <InputText id="contact" @bind-Value="OrderDetail.Contact" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.Contact" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="emailaddress" class="form-label">EmailAddress:</label>
+                    <InputText id="emailaddress" @bind-Value="OrderDetail.EmailAddress" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.EmailAddress" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </EditForm>
+        </div>
     </div>
-</div>
-
-<div>
-    <a href="/orderdetails">Back to List</a>
-</div>
+</body>
 
 @code {
-    [SupplyParameterFromForm]
+    [SupplyParameterFromQuery]
+    private int reservationId { get; set; }
+
     private OrderDetail OrderDetail { get; set; } = new();
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddOrderDetail()
     {
         using var context = DbFactory.CreateDbContext();
+        OrderDetail.ReservationId = reservationId; // Set ReservationId from query
         context.OrderDetail.Add(OrderDetail);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/orderdetails");
     }
 }
+    

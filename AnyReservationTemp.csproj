@@ -39,4 +39,10 @@
     <Folder Include="wwwroot\UI photos\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Components\Account\Pages\AccessDenied.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

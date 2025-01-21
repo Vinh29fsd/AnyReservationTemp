@@ -1,0 +1,71 @@
+﻿@page "/restaurantproducts/delete"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>RestaurantProduct</h2>
+    <hr />
+    @if (restaurantproduct is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">ProductId</dt>
+            <dd class="col-sm-10">@restaurantproduct.ProductId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">RestaurantId</dt>
+            <dd class="col-sm-10">@restaurantproduct.RestaurantId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@restaurantproduct.Name</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Contact</dt>
+            <dd class="col-sm-10">@restaurantproduct.Contact</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">EmailAddress</dt>
+            <dd class="col-sm-10">@restaurantproduct.EmailAddress</dd>
+        </dl>
+        <EditForm method="post" Model="restaurantproduct" OnValidSubmit="DeleteRestaurantProduct" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(restaurantproduct is null)">Delete</button> |
+            <a href="/restaurantproducts">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private RestaurantProduct? restaurantproduct;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        restaurantproduct = await context.RestaurantProductCategory.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (restaurantproduct is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteRestaurantProduct()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.RestaurantProductCategory.Remove(restaurantproduct!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/restaurantproducts");
+    }
+}

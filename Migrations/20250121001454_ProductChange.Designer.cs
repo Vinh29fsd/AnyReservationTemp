@@ -4,6 +4,7 @@ using AnyReservationTemp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnyReservationTemp.Migrations
 {
     [DbContext(typeof(AnyReservationTempContext))]
-    partial class AnyReservationTempContextModelSnapshot : ModelSnapshot
+    [Migration("20250121001454_ProductChange")]
+    partial class ProductChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dbd552f3-045b-407e-b893-e5b9c1c5c5f3",
+                            ConcurrencyStamp = "1863a890-df35-4e8a-9781-2a75debc1755",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +108,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOAU5I1nECypFgdiZhNXXk4HtWFt/UDfnEcNoLwrAL8PBS6bNgYV6R9Po0c6YSM3pA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKfXVZThRFL1jZOCzFxWkGzILeSDt7NuqX/eMWSbLtpXkwxS5maUn/bvQ56gHUiLUg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a591216c-4ab3-448a-8b87-c3e0580d1756",
+                            SecurityStamp = "18f4389a-0667-47db-8a9a-5b88f984777f",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -242,163 +245,12 @@ namespace AnyReservationTemp.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("RestaurantProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Product");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Cost = 2.5,
-                            Name = "Coke",
-                            ProductCategoryId = 5,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Cost = 15.0,
-                            Name = "Sparkling Rose",
-                            ProductCategoryId = 5,
-                            Quantity = 25
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Cost = 2.5,
-                            Name = "Sprite",
-                            ProductCategoryId = 5,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Cost = 5.0,
-                            Name = "Chocolate Milkshake",
-                            ProductCategoryId = 5,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Cost = 10.0,
-                            Name = "Strawberry Blast with Cherry",
-                            ProductCategoryId = 5,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Cost = 6.5,
-                            Name = "Chicken Chop",
-                            ProductCategoryId = 2,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Cost = 13.0,
-                            Name = "Mala Xiang Guo",
-                            ProductCategoryId = 2,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Cost = 26.0,
-                            Name = "Fresh Oyster",
-                            ProductCategoryId = 2,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Cost = 54.0,
-                            Name = "Beef Wellington",
-                            ProductCategoryId = 2,
-                            Quantity = 23
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Cost = 23.0,
-                            Name = "Sausage Platter",
-                            ProductCategoryId = 2,
-                            Quantity = 13
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Cost = 29.0,
-                            Name = "Crabmeat Pasta",
-                            ProductCategoryId = 2,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Cost = 22.5,
-                            Name = "Salmon don",
-                            ProductCategoryId = 2,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Cost = 10.0,
-                            Name = "Cai Fan Special",
-                            ProductCategoryId = 2,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Cost = 252.0,
-                            Name = "Wagyu Beef",
-                            ProductCategoryId = 2,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Cost = 128.0,
-                            Name = "Classic Ribeye",
-                            ProductCategoryId = 2,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Cost = 28.0,
-                            Name = "Crispy Sliced Onion Rings",
-                            ProductCategoryId = 2,
-                            Quantity = 32
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Cost = 20.0,
-                            Name = "French Fries",
-                            ProductCategoryId = 2,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Cost = 14.0,
-                            Name = "Mentaiko Fries",
-                            ProductCategoryId = 2,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Cost = 12.0,
-                            Name = "Calamari",
-                            ProductCategoryId = 2,
-                            Quantity = 16
-                        });
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.ProductCategory", b =>
@@ -425,33 +277,6 @@ namespace AnyReservationTemp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductCategory");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Category = "Appetizer"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Category = "Main"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Category = "Sides"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Category = "Dessert"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Category = "Drinks"
-                        });
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Progress", b =>
@@ -555,15 +380,15 @@ namespace AnyReservationTemp.Migrations
                             Contact = "9661 0401",
                             CustomerId = 0,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateReserved = new DateTime(2025, 1, 21, 23, 1, 35, 258, DateTimeKind.Local).AddTicks(9841),
+                            DateReserved = new DateTime(2025, 1, 21, 8, 14, 53, 139, DateTimeKind.Local).AddTicks(9669),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new TimeOnly(23, 1, 35, 258).Add(TimeSpan.FromTicks(9866)),
+                            EndTime = new TimeOnly(8, 14, 53, 139).Add(TimeSpan.FromTicks(9691)),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new TimeOnly(23, 1, 35, 258).Add(TimeSpan.FromTicks(9857)),
+                            StartTime = new TimeOnly(8, 14, 53, 139).Add(TimeSpan.FromTicks(9682)),
                             TableNo = 0
                         });
                 });
