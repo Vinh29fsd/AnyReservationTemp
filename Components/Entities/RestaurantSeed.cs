@@ -14,7 +14,8 @@ namespace AnyReservationTemp.Components.Entities
                 Name = "BreadBoard",
                 Contact = "+65 6780 4191",
                 EmailAddress = "studentservices@tp.edu.sg",
-                Location = "21 Tampines Ave 4"
+                Location = "21 Tampines Ave 4",
+                ImagePath = "/UI photos/breadboard.png"
             },
             new Restaurant
             {
@@ -22,7 +23,8 @@ namespace AnyReservationTemp.Components.Entities
                 Name = "Brewing Grounds",
                 Contact = "+65 6780 4191",
                 EmailAddress = "studentservices@tp.edu.sg",
-                Location = "21 Tampines Ave 4"
+                Location = "21 Tampines Ave 4",
+                ImagePath = "/UI photos/restaurant_logo.png"
             },
             new Restaurant
             {
@@ -30,7 +32,8 @@ namespace AnyReservationTemp.Components.Entities
                 Name = "Wolfgang Puck",
                 Contact = "+65 6780 4191",
                 EmailAddress = "studentservices@tp.edu.sg",
-                Location = "21 Tampines Ave 4"
+                Location = "21 Tampines Ave 4",
+                ImagePath = "/UI photos/Wolfgang_Puck_logo.jpg"
             },
             new Restaurant
             {
@@ -38,7 +41,8 @@ namespace AnyReservationTemp.Components.Entities
                 Name = "ShortCircuit",
                 Contact = "+65 6780 4191",
                 EmailAddress = "studentservices@tp.edu.sg",
-                Location = "21 Tampines Ave 4"
+                Location = "21 Tampines Ave 4",
+                ImagePath = "/UI photos/Short_Circuit_Logo.jpg"
             },
             new Restaurant
             {
@@ -46,7 +50,8 @@ namespace AnyReservationTemp.Components.Entities
                 Name = "The Bistro Bar",
                 Contact = "+65 6780 4191",
                 EmailAddress = "studentservices@tp.edu.sg",
-                Location = "21 Tampines Ave 4"
+                Location = "21 Tampines Ave 4",
+                ImagePath = "/UI photos/bisto_bar_logo.jpg"
             }
             );
         }

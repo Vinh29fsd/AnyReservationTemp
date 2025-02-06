@@ -1,0 +1,127 @@
+﻿@page "/restaurants/edit"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Administrator, Restaurantstaff")]
+
+<PageTitle>Edit</PageTitle>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-3">
+    <a style="color: #fff3f1" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+<body style="background-color: #fff3f1">
+    <h1 class="text-center">Edit Restaurant</h1>
+    <hr>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-6">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Restaurant</h2>
+                <a href="/restaurants" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+            <hr />
+            @if (Restaurant is null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <EditForm method="post" Model="Restaurant" OnValidSubmit="UpdateRestaurant" FormName="edit" Enhance>
+                    <DataAnnotationsValidator />
+                    <ValidationSummary role="alert" />
+                    <input type="hidden" name="Restaurant.Id" value="@Restaurant.Id" />
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" />
+                        <ValidationMessage For="() => Restaurant.Name" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location:</label>
+                        <InputText id="location" @bind-Value="Restaurant.Location" class="form-control" />
+                        <ValidationMessage For="() => Restaurant.Location" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact" class="form-label">Contact:</label>
+                        <InputText id="contact" @bind-Value="Restaurant.Contact" class="form-control" />
+                        <ValidationMessage For="() => Restaurant.Contact" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailaddress" class="form-label">EmailAddress:</label>
+                        <InputText id="emailaddress" @bind-Value="Restaurant.EmailAddress" class="form-control" />
+                        <ValidationMessage For="() => Restaurant.EmailAddress" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagepath" class="form-label">ImagePath:</label>
+                        <InputText id="imagepath" @bind-Value="Restaurant.ImagePath" class="form-control" />
+                        <ValidationMessage For="() => Restaurant.ImagePath" class="text-danger" />
+                    </div>
+                    <div hidden class="mb-3">
+                        <label for="createdby" class="form-label">CreatedBy:</label>
+                        <InputText id="createdby" @bind-Value="Restaurant.CreatedBy" class="form-control" />
+                        <ValidationMessage For="() => Restaurant.CreatedBy" class="text-danger" />
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a class="btn btn-primary" href="@($"/products/staff?restaurantId={Id}")">Add/Edit Product</a>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</body>
+
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Restaurant? Restaurant { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Restaurant ??= await context.Restaurant.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Restaurant is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateRestaurant()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Restaurant!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!RestaurantExists(Restaurant!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/restaurants");
+    }
+
+    private bool RestaurantExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Restaurant.Any(e => e.Id == id);
+    }
+}

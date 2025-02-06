@@ -4,6 +4,8 @@
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 @inject NavigationManager NavigationManager
 
+@attribute [Authorize(Roles = "Administrator, RestaurantStaff")]
+
 <PageTitle>Delete</PageTitle>
 
 <h1>Delete</h1>

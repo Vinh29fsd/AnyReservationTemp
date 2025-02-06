@@ -1,0 +1,62 @@
+﻿.restaurant-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+}
+
+.restaurant-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    width: 330px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.create-new-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e7f3e7; /* Light green background */
+    border: 2px dashed #28a745; /* Dashed green border */
+    width: 330px; /* Match restaurant card size */
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
+    cursor: pointer;
+}
+
+    .create-new-box:hover {
+        background-color: #d4edda; /* Slightly darker green on hover */
+        border-color: #218838; /* Darker green for border on hover */
+        transform: scale(1.1); /* Slightly enlarge the box */
+        box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+    }
+
+.create-new-icon {
+    font-size: 48px; /* Size of the plus icon */
+    font-weight: bold;
+    color: #28a745; /* Green color for the icon */
+    transition: color 0.2s; /* Smooth color change on hover */
+}
+
+.create-new-box:hover .create-new-icon {
+    color: #155724; /* Darker green for the plus icon on hover */
+}
+
+.restaurant-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.restaurant-details {
+    padding: 15px;
+}
+
+.restaurant-actions {
+    padding: 10px;
+}
+
+.restaurant-card:hover {
+    transform: scale(1.05);
+}

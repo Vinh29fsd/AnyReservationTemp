@@ -97,7 +97,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dbd552f3-045b-407e-b893-e5b9c1c5c5f3",
+                            ConcurrencyStamp = "b0c588ad-a9eb-4785-bc01-25248d6ab203",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,11 +105,47 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOAU5I1nECypFgdiZhNXXk4HtWFt/UDfnEcNoLwrAL8PBS6bNgYV6R9Po0c6YSM3pA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELBQtpre0MsQ9nfyIo9tVyHKlf+Hqu+B+QDR7IwWrLb8MAt5isP1vMuO3qsQ79yjIQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a591216c-4ab3-448a-8b87-c3e0580d1756",
+                            SecurityStamp = "11c2e3ff-d26e-4f2a-890c-95eaab916866",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
+                        },
+                        new
+                        {
+                            Id = "07f8ba5b-c88f-47fb-8405-43d39e3dc0fa",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8dbf44b5-26fe-42a8-9141-c88578607f35",
+                            Email = "staff@restaurant.com",
+                            EmailConfirmed = true,
+                            FirstName = "Staff",
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "STAFF@RESTAURANT.COM",
+                            NormalizedUserName = "STAFF@RESTAURANT.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJhHLndNTJSTJaCslYVWn7L9LBjObE9gwOTk3ImnhUcvdZIdJhH37TUuE4ufhshQCg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "3494c622-58d4-4139-8b36-83c08014aeba",
+                            TwoFactorEnabled = false,
+                            UserName = "staff@restaurant.com"
+                        },
+                        new
+                        {
+                            Id = "41b73075-dea9-4fba-9a4f-0331abd78f72",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c2aa6ea7-864c-4fae-8152-6b0a50da6ab7",
+                            Email = "staff@anyrestaurant.com",
+                            EmailConfirmed = true,
+                            FirstName = "Staff",
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "STAFF@ANYRESTAURANT.COM",
+                            NormalizedUserName = "STAFF@ANYRESTAURANT.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI6dFjNgBuudaO5LH6XkYIp1BU1O5+cl8mkCw0ZmwBZabYR/KdwbHLVq4QtYzhhGHA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "69b9075d-d68f-4186-840e-17494f27c72d",
+                            TwoFactorEnabled = false,
+                            UserName = "staff@anyrestaurant.com"
                         });
                 });
 
@@ -162,20 +198,17 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("Contact")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OrderDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ResevationId")
                         .HasColumnType("int");
+
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -199,17 +232,14 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
-
-                    b.Property<int>("ReservationId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalAmount")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -555,15 +585,15 @@ namespace AnyReservationTemp.Migrations
                             Contact = "9661 0401",
                             CustomerId = 0,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateReserved = new DateTime(2025, 1, 21, 23, 1, 35, 258, DateTimeKind.Local).AddTicks(9841),
+                            DateReserved = new DateTime(2025, 2, 6, 14, 9, 7, 355, DateTimeKind.Local).AddTicks(4930),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new TimeOnly(23, 1, 35, 258).Add(TimeSpan.FromTicks(9866)),
+                            EndTime = new TimeOnly(14, 9, 7, 355).Add(TimeSpan.FromTicks(4957)),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new TimeOnly(23, 1, 35, 258).Add(TimeSpan.FromTicks(9857)),
+                            StartTime = new TimeOnly(14, 9, 7, 355).Add(TimeSpan.FromTicks(4946)),
                             TableNo = 0
                         });
                 });
@@ -607,6 +637,9 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("Contact")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -619,6 +652,9 @@ namespace AnyReservationTemp.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Restaurant");
@@ -629,6 +665,7 @@ namespace AnyReservationTemp.Migrations
                             Id = 1,
                             Contact = "+65 6780 4191",
                             EmailAddress = "studentservices@tp.edu.sg",
+                            ImagePath = "/UI photos/breadboard.png",
                             Location = "21 Tampines Ave 4",
                             Name = "BreadBoard"
                         },
@@ -637,6 +674,7 @@ namespace AnyReservationTemp.Migrations
                             Id = 2,
                             Contact = "+65 6780 4191",
                             EmailAddress = "studentservices@tp.edu.sg",
+                            ImagePath = "/UI photos/restaurant_logo.png",
                             Location = "21 Tampines Ave 4",
                             Name = "Brewing Grounds"
                         },
@@ -645,6 +683,7 @@ namespace AnyReservationTemp.Migrations
                             Id = 3,
                             Contact = "+65 6780 4191",
                             EmailAddress = "studentservices@tp.edu.sg",
+                            ImagePath = "/UI photos/Wolfgang_Puck_logo.jpg",
                             Location = "21 Tampines Ave 4",
                             Name = "Wolfgang Puck"
                         },
@@ -653,6 +692,7 @@ namespace AnyReservationTemp.Migrations
                             Id = 4,
                             Contact = "+65 6780 4191",
                             EmailAddress = "studentservices@tp.edu.sg",
+                            ImagePath = "/UI photos/Short_Circuit_Logo.jpg",
                             Location = "21 Tampines Ave 4",
                             Name = "ShortCircuit"
                         },
@@ -661,6 +701,7 @@ namespace AnyReservationTemp.Migrations
                             Id = 5,
                             Contact = "+65 6780 4191",
                             EmailAddress = "studentservices@tp.edu.sg",
+                            ImagePath = "/UI photos/bisto_bar_logo.jpg",
                             Location = "21 Tampines Ave 4",
                             Name = "The Bistro Bar"
                         });
@@ -692,6 +733,128 @@ namespace AnyReservationTemp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RestaurantProductCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProductId = 3,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ProductId = 20,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ProductId = 19,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ProductId = 18,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ProductId = 17,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ProductId = 16,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ProductId = 15,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ProductId = 14,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ProductId = 13,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ProductId = 12,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ProductId = 11,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ProductId = 10,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ProductId = 9,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ProductId = 8,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ProductId = 7,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ProductId = 6,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ProductId = 5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ProductId = 4,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 21,
+                            ProductId = 2,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 22,
+                            ProductId = 1,
+                            RestaurantId = 1
+                        });
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.RestaurantTable", b =>
@@ -905,6 +1068,12 @@ namespace AnyReservationTemp.Migrations
                             Id = "bd2bcf0c-20db-474f-8407-5a6b159518bb",
                             Name = "User",
                             NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "c23fbbe3-4c80-4e70-9874-985d9030ef94",
+                            Name = "RestaurantStaff",
+                            NormalizedName = "RESTAURANTSTAFF"
                         });
                 });
 
@@ -956,6 +1125,22 @@ namespace AnyReservationTemp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "staffId",
+                            ClaimValue = "07f8ba5b-c88f-47fb-8405-43d39e3dc0fa",
+                            UserId = "07f8ba5b-c88f-47fb-8405-43d39e3dc0fa"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ClaimType = "staffId",
+                            ClaimValue = "41b73075-dea9-4fba-9a4f-0331abd78f72",
+                            UserId = "41b73075-dea9-4fba-9a4f-0331abd78f72"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -999,6 +1184,16 @@ namespace AnyReservationTemp.Migrations
                         {
                             UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             RoleId = "ad2bcf0c-20db-474f-8407-5a6b159518ba"
+                        },
+                        new
+                        {
+                            UserId = "07f8ba5b-c88f-47fb-8405-43d39e3dc0fa",
+                            RoleId = "c23fbbe3-4c80-4e70-9874-985d9030ef94"
+                        },
+                        new
+                        {
+                            UserId = "41b73075-dea9-4fba-9a4f-0331abd78f72",
+                            RoleId = "c23fbbe3-4c80-4e70-9874-985d9030ef94"
                         });
                 });
 

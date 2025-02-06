@@ -1,0 +1,82 @@
+﻿@page "/orderdetails/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+@layout MinimalLayout
+
+<PageTitle>Create</PageTitle>
+<body style="background-color: #fff3f1">
+    <h1>Confirm Your Selection</h1>
+    <hr />
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-4 justify-content-center align-items-center">
+            <EditForm method="post" Model="OrderDetail" OnValidSubmit="AddOrderDetail" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div diabled class="mb-3">
+                    <label for="productid" class="form-label"></label>
+                    <InputNumber hidden id="productid" @bind-Value="OrderDetail.ProductId" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.ProductId" class="text-danger" />
+                </div>
+                <div class="mb-3 text-center">
+                    <label for="quantity" class="form-label">@Products.FirstOrDefault(p => p.Id == productId).Name</label>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <InputNumber style="width: 80px; text-align: center;" id="quantity" @bind-Value="OrderDetail.Quantity" class="form-control" />
+                    </div>
+                    <ValidationMessage For="() => OrderDetail.Quantity" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="orderid" class="form-label"></label>
+                    <InputNumber hidden id="orderid" @bind-Value="OrderDetail.OrderId" class="form-control" />
+                    <ValidationMessage For="() => OrderDetail.OrderId" class="text-danger" />
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</body>
+
+
+@code {
+    [SupplyParameterFromQuery]
+    private int orderId { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int productId { get; set; }
+
+    [SupplyParameterFromForm]
+    private OrderDetail OrderDetail { get; set; } = new();
+
+    private IList<Product> Products { get; set; }
+    private double totalAmount { get; set; } = 0;
+    private Product price { get; set; }
+
+    protected override void OnInitialized()
+    {
+        using var context = DbFactory.CreateDbContext();
+        OrderDetail.ProductId = productId;
+        OrderDetail.OrderId = orderId;
+        Products = context.Product.ToList();
+        price = Products.FirstOrDefault(c => c.Id == productId);
+    }
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddOrderDetail()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        var product = await context.Product.FirstOrDefaultAsync(q => q.Id == productId);
+
+        product.Quantity -= OrderDetail.Quantity;
+
+        context.OrderDetail.Add(OrderDetail);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo(($"/orderdetails/create/success?orderId={orderId}"));
+    }
+}

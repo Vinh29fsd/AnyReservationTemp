@@ -1,0 +1,104 @@
+﻿@page "/reservations/approved"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+@attribute [Authorize(Roles = "Administrator, User, RestaurantStaff")]
+
+<PageTitle>Reservations</PageTitle>
+
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-3">
+    <a style="color: #fff3f1"class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+
+<body>
+    @if (isAdmin || isStaff)
+    {
+        <h1>Customer Reservations</h1>
+    }
+    else
+    {
+        <h1>Your Reservations</h1>
+    }
+    <div class="btn-group mb-3">
+        <button class="btn btn-outline-warning" onclick="location.href='reservations'">Pending</button>
+        <button class="btn btn-outline-success" onclick="location.href='reservations/approved'">Approved</button>
+        <button class="btn btn-outline-danger" onclick="location.href='reservations/rejected'">Rejected</button>
+    </div>
+    <hr>
+
+    <div class="reservation-container">
+        <div class="reservation-box create-new-box" onclick="location.href='restaurants'">
+            <div class="create-new-icon">
+                <span class="plus-icon">+</span>
+            </div>
+        </div>
+        @foreach (var reservation in FilteredReservations.ToList())
+        {
+            if (ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description == "Approved")
+            {
+                <div class="reservation-box">
+                    <h3>@reservation.Name</h3>
+                    <p><strong>Contact:</strong> @reservation.Contact</p>
+                    <p><strong>Email:</strong> @reservation.EmailAddress</p>
+                    <p><strong>Date Reserved:</strong> @reservation.DateReserved.ToShortDateString()</p>
+                    <p><strong>Start Time:</strong> @reservation.StartTime</p>
+                    <p><strong>End Time:</strong> @reservation.EndTime</p>
+                    <p hidden><strong>Table No:</strong> @reservation.TableNo</p>
+                    <p><strong>Restaurant:</strong> @Restaurants.FirstOrDefault(r => r.Id == reservation.RestaurantId)?.Name </p>
+                    <p><strong>Status:</strong> @ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description </p>
+                    <p><strong>Date Created:</strong> @reservation.DateCreated</p>
+                    <AuthorizeView Roles="Administrator">
+                        <p><strong>Created By:</strong> @reservation.CreatedBy</p>
+                    </AuthorizeView>
+
+
+                    <div class="reservation-actions">
+                        <button class="btn btn-primary" onclick="location.href='@($"reservations/edit?id={reservation.Id}")'">Edit</button>
+                        <button class="btn btn-info" onclick="location.href='@($"reservations/details?id={reservation.Id}")'">Details</button>
+                        <button class="btn btn-info" onclick="location.href='@($"orders?reservationId={reservation.Id}")'">Orders</button>
+                        @if (isAdmin || isStaff)
+                        {
+                            <button style="margin-left: 3px" class="btn btn-secondary btn-danger" onclick="location.href='@($"reservations/delete?id={reservation.Id}")'">Delete</button>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</body>
+
+@code {
+    private AnyReservationTempContext context = default!;
+    private string userId = string.Empty;
+    private bool isAdmin = false;
+    private bool isStaff = false;
+
+    private IQueryable<Restaurant> Restaurants => context.Restaurant;
+    private IQueryable<Status> ProgressStatuses => context.Status;  
+
+    [Inject]
+    private AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+
+    private IQueryable<Reservation> FilteredReservations => isAdmin
+        ? context.Reservation.OrderByDescending(r => r.Id)
+        : context.Reservation.Where(e => e.CreatedBy == userId).OrderByDescending(r => r.Id);
+
+    protected override async void OnInitialized()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        userId = user.FindFirst("userId")?.Value ?? string.Empty;
+        isAdmin = user.IsInRole("Administrator");
+        isStaff = user.IsInRole("RestaurantStaff");
+
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

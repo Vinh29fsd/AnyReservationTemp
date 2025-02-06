@@ -9,11 +9,18 @@
   <ItemGroup>
     <None Remove="Components\Account\Pages\Login.razor.css" />
     <None Remove="Components\Pages\Home.razor.css" />
+    <None Remove="Components\Pages\Site\ProductPages\Index - Copy.razor.css" />
+    <None Remove="Components\Pages\Site\RestaurantPages\Index.razor.css" />
+    <None Remove="Components\Pages\Site\OrderPages\Edit.razor.css" />
+    <None Remove="Components\Pages\Site\ProductPages\Index.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Components\Account\Pages\Login.razor.css" />
     <Content Include="Components\Pages\Home.razor.css" />
+    <Content Include="Components\Pages\Site\RestaurantPages\Index.razor.css" />
+    <Content Include="Components\Pages\Site\OrderPages\Edit.razor.css" />
+    <Content Include="Components\Pages\Site\ProductPages\Index.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

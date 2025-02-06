@@ -1,0 +1,33 @@
+﻿@page "/orderdetails"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+@layout MinimalLayout
+
+<PageTitle>Index</PageTitle>
+
+<QuickGrid Class="table" Items="context.OrderDetail">
+    <PropertyColumn Property="orderdetail => orderdetail.Quantity" />
+    <PropertyColumn Property="orderdetail => orderdetail.OrderId" />
+    <PropertyColumn Property="orderdetail => orderdetail.ProductId" />
+
+    <TemplateColumn Context="orderdetail">
+        <a href="@($"orderdetails/edit?id={orderdetail.Id}")">Edit</a>
+        <a href="@($"orderdetails/delete?id={orderdetail.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AnyReservationTempContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

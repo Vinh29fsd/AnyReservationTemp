@@ -1,0 +1,13 @@
+﻿/* Custom smaller button */
+.small-btn {
+    font-size: 0.75rem; /* Smaller text */
+    padding: 3px 6px; /* Reduce padding for a more compact button */
+    height: auto; /* Let the height adjust to content */
+}
+
+.partial-hr {
+    width: 50%;
+    height: 2px;
+    background-color: #ddd;
+    margin: 15px 0;
+}

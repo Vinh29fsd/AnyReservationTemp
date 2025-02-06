@@ -1,0 +1,162 @@
+﻿@page "/orders/edit"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-3 m-2 rounded-pill" href="#">Space</a>
+</div>
+
+<body style="background-color: #fff3f1">
+    <div class="container d-flex flex-column align-items-center">
+        <h3>Order Details</h3>
+        <div class="partial-hr"></div>
+
+        <div class="order-details text-center">
+            @if (OrderDetails is null || !OrderDetails.Any())
+            {
+                <p>No order found for this order.</p>
+            }
+            else
+            {
+                <ul class="list-unstyled">
+                    @foreach (var detail in OrderDetails)
+                    {
+                        var product = Products.FirstOrDefault(p => p.Id == detail.ProductId);
+                        if (product != null)
+                        {
+                            <li class="mb-2">
+                                @product.Name x @detail.Quantity - Total : $@(@detail.Quantity * @product.Cost)
+                                <div class="d-flex justify-content-center mt-2">
+                                    <a href="/orderdetails/edit?id=@detail.Id&orderId=@Id" class="btn btn-secondary btn-sm mx-2">Edit</a>
+                                    <a href="/orderdetails/delete?id=@detail.Id&orderId=@Id" class="btn btn-danger btn-sm mx-2">Delete</a>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <hr>
+
+                <div class="text-center">
+                    <h5>Total Order Amount: $@TotalAmount</h5>
+                    <h5>Service Charge (5%): $@ServiceCharge</h5>
+                    <h5>Downpayment (20%): $@DownPayment</h5>
+                    <h3>Amount to Pay: $@ToPay</h3>
+                </div>
+            }
+        </div>
+
+        <div class="partial-hr"></div>
+
+        @if (Order is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-4">
+                    <EditForm method="post" Model="Order" OnValidSubmit="UpdateOrder" FormName="edit" Enhance>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary role="alert" />
+
+                        <input type="hidden" name="Order.Id" value="@Order.Id" />
+
+                        <div hidden class="mb-3">
+                            <InputNumber id="totalamount" @bind-Value="Order.TotalAmount" class="form-control" />
+                            <ValidationMessage For="() => Order.TotalAmount" class="text-danger" />
+                        </div>
+                        <div hidden class="mb-3">
+                            <InputNumber id="resevationid" @bind-Value="Order.ResevationId" class="form-control" />
+                            <ValidationMessage For="() => Order.ResevationId" class="text-danger" />
+                        </div>
+
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="submit" class="btn btn-primary">Confirm</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Order? Order { get; set; }
+
+    private List<OrderDetail> OrderDetails { get; set; } = new();
+    private List<Product> Products { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Order ??= await context.Order.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Order is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+            return;
+        }
+
+        // Fetch all products to match the ProductId in order details
+        Products = await context.Product.ToListAsync();
+
+        // Fetch order details tied to the current orderId
+        OrderDetails = await context.OrderDetail
+            .Where(od => od.OrderId == Id)
+            .ToListAsync();
+    }
+
+    private double TotalAmount => OrderDetails
+    .Sum(detail =>
+    {
+        var product = Products.FirstOrDefault(p => p.Id == detail.ProductId);
+        return product != null ? detail.Quantity * product.Cost : 0;
+    });
+
+    private double ServiceCharge => Math.Round(TotalAmount * 0.05, 2);
+
+    private double DownPayment => Math.Round(TotalAmount * 0.2, 2);
+
+    private double ToPay => Math.Round(ServiceCharge + DownPayment, 2);
+
+    private async Task UpdateOrder()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Order!).State = EntityState.Modified;
+
+        Order.TotalAmount = ToPay;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!OrderExists(Order!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/reservations");
+    }
+
+    private bool OrderExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Order.Any(e => e.Id == id);
+    }
+}

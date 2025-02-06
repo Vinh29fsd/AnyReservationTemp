@@ -1,0 +1,92 @@
+﻿@page "/products"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@using AnyReservationTemp.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<AnyReservationTempContext> DbFactory
+@inject NavigationManager NavManager
+
+<PageTitle>Products</PageTitle>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+
+
+<body style="background-color: #fff3f1;">
+    <h1 class="text-center">Available Products</h1>
+
+    <hr>
+
+    <div class="product-container">
+        @foreach (var product in Products)
+        {
+            <div class="product-card">
+                <h3>@product.Name</h3>
+                <p>Category: @Category.FirstOrDefault(c => c.Id == product.ProductCategoryId)?.Category</p>
+                <p>Cost: $@product.Cost</p>
+                <p>Quantity: @product.Quantity</p>
+
+                <!-- Button to Open Modal (Unique ID) -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal_@product.Id">
+                    Order Now
+                </button>
+            </div>
+
+            <!-- Modal (Unique ID for Each Product) -->
+            <div class="modal fade" id="orderModal_@product.Id" aria-labelledby="orderModalLabel_@product.Id" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="orderModalLabel_@product.Id">Order - @product.Name</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Embedded Webpage for Ordering -->
+                            <iframe src="@($"/orderdetails/create?orderId={OrderId}&productId={product.Id}")" style="width: 100%; height: 600px; border: none;"></iframe>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <a href="/orders/edit?id=@OrderId" class="checkout-btn btn btn-success ">Checkout</a>
+</body>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int OrderId { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int restaurantId { get; set; }
+
+
+    private AnyReservationTempContext context = default!;
+    private List<Product> Products { get; set; } = new();
+    private List<ProductCategory> Category { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+        Category = context.ProductCategory.ToList();
+
+        var productIdsForRestaurant = context.RestaurantProductCategory
+            .Where(rp => rp.RestaurantId == restaurantId)
+            .Select(rp => rp.ProductId)
+            .ToList();
+
+        Products = context.Product
+            .Where(p => productIdsForRestaurant.Contains(p.Id)) 
+            .ToList();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,109 @@
+﻿@page "/products/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Administrator, RestaurantStaff")]
+
+<PageTitle>Create Product</PageTitle>
+
+<!-- Background Color -->
+<body style="background-color: #fff3f1">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-6">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Create Product</h2>
+                <a href="@($"/products/staff?restaurantId={restaurantId}")" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+            <hr />
+
+            <EditForm method="post" Model="Product" OnValidSubmit="AddProduct" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Product Name:</label>
+                    <InputText id="name" @bind-Value="Product.Name" class="form-control" />
+                    <ValidationMessage For="() => Product.Name" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="productcategoryid" class="form-label">Category:</label>
+                    <InputSelect id="productcategoryid" @bind-Value="Product.ProductCategoryId" class="form-control">
+                        <option value="">-- Category --</option>
+                        @if (ProductCategories != null)
+                        {
+                            foreach (var category in ProductCategories)
+                            {
+                                <option value="@category.Id">@category.Category</option>
+                            }
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Product.ProductCategoryId" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="cost" class="form-label">Cost:</label>
+                    <InputNumber id="cost" @bind-Value="Product.Cost" class="form-control" />
+                    <ValidationMessage For="() => Product.Cost" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity:</label>
+                    <InputNumber id="quantity" @bind-Value="Product.Quantity" class="form-control" />
+                    <ValidationMessage For="() => Product.Quantity" class="text-danger" />
+                </div>
+
+                <div hidden class="mb-3">
+                    <label for="restaurantId" class="form-label">RestaurantId:</label>
+                    <InputNumber id="restaurantId" @bind-Value="RestaurantProduct.RestaurantId" class="form-control" />
+                    <ValidationMessage For="() => RestaurantProduct.RestaurantId" class="text-danger" />
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </EditForm>
+
+        </div>
+    </div>
+</body>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int restaurantId { get; set; }
+
+    [SupplyParameterFromForm]
+    private Product Product { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    private RestaurantProduct RestaurantProduct { get; set; } = new();
+
+    private List<ProductCategory> ProductCategories { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        ProductCategories = await context.ProductCategory.ToListAsync();
+        RestaurantProduct.RestaurantId = restaurantId;
+    }
+
+    private async Task AddProduct()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Product.Add(Product);
+        await context.SaveChangesAsync();
+
+        RestaurantProduct.ProductId = Product.Id;
+        RestaurantProduct.RestaurantId = restaurantId;
+
+        context.RestaurantProductCategory.Add(RestaurantProduct);
+        await context.SaveChangesAsync();
+
+        NavigationManager.NavigateTo($"/products/staff?restaurantId={restaurantId}");
+    }
+}

@@ -1,0 +1,151 @@
+﻿@page "/reservations/details"
+@using AnyReservationTemp.Data
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+
+<body style="background: #fff3f1;">
+    <div class="container mt-5">
+        <div class="row justify-content-between mb-4">
+            <div class="col-auto">
+                <a href="@($"/reservations")" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center">Review Your Reservations</h2>
+                <hr />
+
+                @if (reservation is null)
+                {
+                    <p><em>Loading...</em></p>
+                }
+                else
+                {
+                    <dl class="row">
+                        <dt class="col-sm-6 text-end">Name:</dt>
+                        <dd class="col-sm-6">@reservation.Name</dd>
+                        <dt class="col-sm-6 text-end">Contact:</dt>
+                        <dd class="col-sm-6">@reservation.Contact</dd>
+                        <dt class="col-sm-6 text-end">Email Address:</dt>
+                        <dd class="col-sm-6">@reservation.EmailAddress</dd>
+                        <dt class="col-sm-6 text-end">Number of Guests:</dt>
+                        <dd class="col-sm-6">@reservation.NumOfCustomer</dd>
+                        <dt class="col-sm-6 text-end">Restaurant:</dt>
+                        <dd class="col-sm-6">@Restaurants.FirstOrDefault(r => r.Id == reservation.RestaurantId)?.Name</dd>
+                        <dt class="col-sm-6 text-end">Date Reserved:</dt>
+                        <dd class="col-sm-6">@reservation.DateReserved.ToString("MM/dd/yyyy")</dd>
+                        <dt class="col-sm-6 text-end">Start Time:</dt>
+                        <dd class="col-sm-6">@reservation.StartTime.ToString("HH:mm")</dd>
+                        <dt class="col-sm-6 text-end">End Time:</dt>
+                        <dd class="col-sm-6">@reservation.EndTime.ToString("HH:mm")</dd>
+                        <dt class="col-sm-6 text-end">Status:</dt>
+                        <dd class="col-sm-6">@ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description</dd>
+                        <div hidden>
+                            <dt class="col-sm-6">CustomerId</dt>
+                            <dd class="col-sm-6">@reservation.CustomerId</dd>
+                            <dt class="col-sm-6">Table No</dt>
+                            <dd class="col-sm-6">@reservation.TableNo</dd>
+                            <dt class="col-sm-6">Date Created</dt>
+                            <dd class="col-sm-6">@reservation.DateCreated</dd>
+                            <dt class="col-sm-6">Date Updated</dt>
+                            <dd class="col-sm-6">@reservation.DateUpdated</dd>
+                            <dt class="col-sm-6">Created By</dt>
+                            <dd class="col-sm-6">@reservation.CreatedBy</dd>
+                            <dt class="col-sm-6">Updated By</dt>
+                            <dd class="col-sm-6">@reservation.UpdatedBy</dd>
+                        </div>
+                    </dl>
+                    <hr>
+                    <div class="text-center mb-4 justify-content-center">
+                        <div class="row justify-content-center">
+                            <div class="col-md-4 justify-content-center">
+                                <EditForm method="post" Model="Order" OnValidSubmit="CreateOrder" FormName="create" Enhance>
+                                    <DataAnnotationsValidator />
+                                    <ValidationSummary class="text-danger" role="alert" />
+                                    <div hidden class="mb-3">
+                                        <label for="totalamount" class="form-label">TotalAmount:</label>
+                                        <InputNumber id="totalamount" @bind-Value="Order.TotalAmount" class="form-control" />
+                                        <ValidationMessage For="() => Order.TotalAmount" class="text-danger" />
+                                    </div>
+                                    <div hidden class="mb-3">
+                                        <label for="resevationid" class="form-label">ResevationId:</label>
+                                        <InputNumber id="resevationid" @bind-Value="Order.ResevationId" class="form-control" />
+                                        <ValidationMessage For="() => Order.ResevationId" class="text-danger" />
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Pre-Order Your Food Here</button>
+                                </EditForm>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="@($"/reservations/edit?id={reservation.Id}")" class="btn btn-warning">Edit Reservation</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+
+@code {
+    private Reservation? reservation;
+    private Restaurant restaurant;
+    private Order Order { get; set; } = new();
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    private AnyReservationTempContext context = default!;
+    private IQueryable<Restaurant> Restaurants => context.Restaurant;
+    private IQueryable<Status> ProgressStatuses => context.Status;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+        reservation = await context.Reservation.FirstOrDefaultAsync(m => m.Id == Id);
+        restaurant = await context.Restaurant.FirstOrDefaultAsync(r => r.Id == reservation.RestaurantId);
+        if (reservation is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
+
+@code {
+    private async Task CreateOrder()
+    {
+        using var context = DbFactory.CreateDbContext();
+        var existingOrder = await context.Order.FirstOrDefaultAsync(o => o.ResevationId == reservation.Id);
+        int OrderId;
+        if (existingOrder != null)
+        {
+            OrderId = existingOrder.Id;
+        }
+        else
+        {
+            OrderId = reservation.Id;
+
+            Order.ResevationId = OrderId;
+            context.Order.Add(Order);
+            await context.SaveChangesAsync();
+
+            // Retrieve the newly created order's ID
+            OrderId = Order.Id;
+        }
+
+
+        // Redirect to the Order Details Create page with the new order ID
+        NavigationManager.NavigateTo($"/products?orderId={OrderId}&restaurantId={restaurant.Id}");
+    }
+
+}

@@ -1,0 +1,114 @@
+﻿    @page "/restaurants"
+    @using Microsoft.EntityFrameworkCore
+    @using Microsoft.AspNetCore.Components.QuickGrid
+    @using AnyReservationTemp.Domain
+    @using AnyReservationTemp.Data
+    @implements IAsyncDisposable
+    @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+
+<PageTitle>Restaurants</PageTitle>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-3 m-2 rounded-pill" href="#">Space</a>
+</div>
+
+
+
+<body style="background: #fff3f1">
+    <h1 class="text-center">Available Restaurants</h1>
+
+    <hr>
+
+    <div class="restaurant-container">
+        @if (isAdmin || isStaff)
+        {
+            <div class="create-new-box" onclick="location.href='restaurants/create'">
+                <a class="create-new-btn">
+                    <span class="create-new-icon">+</span>
+                </a>
+            </div>
+        }
+
+        @foreach (var restaurant in FilteredRestaurant.ToList())
+        {
+            <div class="restaurant-card">
+                <!-- Display Image (if ImagePath exists) -->
+                @if (!string.IsNullOrEmpty(restaurant.ImagePath))
+                {
+                    <img src="@restaurant.ImagePath" alt="@restaurant.Name" class="restaurant-image" />
+                }
+                else
+                {
+                    <img src="default-image-path.jpg" alt="No Image" class="restaurant-image" />
+                }
+
+                <!-- Restaurant Details -->
+                <div class="restaurant-details">
+                    <h2>@restaurant.Name</h2>
+                    <p><strong>Location:</strong> @restaurant.Location</p>
+                    <p><strong>Contact:</strong> @restaurant.Contact</p>
+                    <p><strong>Email:</strong> @restaurant.EmailAddress</p>
+                    <AuthorizeView Roles="Administrator">
+                        <p>Created By:<strong>@restaurant.CreatedBy</strong></p>
+                    </AuthorizeView>
+
+                </div>
+
+                <!-- Edit, Details, Delete Links -->
+                @if (isAdmin || isStaff)
+                {
+                    <div class="restaurant-actions">
+                        <a class="btn btn-primary btn-success" href="/reservations/create?restaurantId=@restaurant.Id">Reserve now!</a>
+                        <a class="btn btn-info" href="@($"restaurants/details?id={restaurant.Id}")">Details</a>
+                        <a class="btn btn-primary"href="@($"restaurants/edit?id={restaurant.Id}")">Edit</a> 
+                        <a class="btn btn-danger" href="@($"restaurants/delete?id={restaurant.Id}")">Del</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="restaurant-actions">
+                        <a class="btn btn-primary btn-success" onclick="location.href='/reservations/create?restaurantId=@restaurant.Id'">Reserve now!</a>
+                        <a class="btn btn-info" href="@($"restaurants/details?id={restaurant.Id}")">Details</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+<script src="map.js"></script>
+
+@code {
+    private AnyReservationTempContext context = default!;
+    private bool isAdmin = false;
+    private bool isStaff = false;
+    private bool isUser = false;
+    private string staffId = string.Empty;
+
+    @inject AuthenticationStateProvider authenticationStateProvider
+
+    private IQueryable<Restaurant> FilteredRestaurant =>
+        !isUser && !isAdmin && !isStaff 
+            ? context.Restaurant 
+            : isAdmin || isUser  
+                ? context.Restaurant
+                : context.Restaurant.Where(e => e.CreatedBy == staffId); 
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        context = DbFactory.CreateDbContext();
+
+        staffId = user.FindFirst("staffId")?.Value ?? string.Empty;
+        isUser = user.IsInRole("User");
+        isAdmin = user.IsInRole("Administrator");
+        isStaff = user.IsInRole("RestaurantStaff");
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    }

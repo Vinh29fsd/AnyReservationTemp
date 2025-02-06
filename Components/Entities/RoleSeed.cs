@@ -20,6 +20,12 @@ namespace AnyReservationTemp.Components.Entities
                     Id = "bd2bcf0c-20db-474f-8407-5a6b159518bb",
                     Name = "User",
                     NormalizedName = "USER"
+                },
+                new IdentityRole
+                {
+                    Id = "c23fbbe3-4c80-4e70-9874-985d9030ef94",
+                    Name = "RestaurantStaff",
+                    NormalizedName = "RESTAURANTSTAFF"
                 });
         }
     }

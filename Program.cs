@@ -26,6 +26,7 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -40,7 +41,6 @@ builder.Services.AddIdentityCore<AnyReservationTempUser>(options => options.Sign
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<AnyReservationTempUser>, IdentityNoOpEmailSender>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

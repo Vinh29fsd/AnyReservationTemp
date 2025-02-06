@@ -1,0 +1,91 @@
+﻿@page "/restaurants/create"
+@using Microsoft.EntityFrameworkCore
+@using AnyReservationTemp.Domain
+@inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+<body style="background-color: #fff3f1">
+    <h1>Create</h1>
+
+    <h2>Restaurant</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Restaurant" OnValidSubmit="AddRestaurant" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location:</label>
+                    <InputText id="location" @bind-Value="Restaurant.Location" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Location" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Contact:</label>
+                    <InputText id="contact" @bind-Value="Restaurant.Contact" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Contact" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="emailaddress" class="form-label">EmailAddress:</label>
+                    <InputText id="emailaddress" @bind-Value="Restaurant.EmailAddress" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.EmailAddress" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="imagepath" class="form-label">ImagePath:</label>
+                    <InputText id="imagepath" @bind-Value="Restaurant.ImagePath" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.ImagePath" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </EditForm>
+        </div>
+    </div>
+
+    <div>
+        <a href="/restaurants">Back to List</a>
+    </div>
+</body>
+@code {
+    [SupplyParameterFromForm]
+    private Restaurant Restaurant { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddRestaurant()
+    {
+        Restaurant.CreatedBy = staffId;
+        Restaurant.UpdatedBy = staffId;
+
+
+        using var context = DbFactory.CreateDbContext();
+        context.Restaurant.Add(Restaurant);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/restaurants");
+    }
+    //Create userId string to store the user id, default value is "System".
+    private string staffId = "Admin";
+
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider authenticationStateProvider
+
+    protected override async void OnInitialized()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Get the staffId claim
+        var staffIdClaim = user.FindFirst("staffId");
+        if (staffIdClaim != null)
+        {
+            staffId = staffIdClaim.Value;
+        }
+    }
+}

@@ -37,6 +37,8 @@ namespace AnyReservationTemp.Data
             builder.ApplyConfiguration(new StatusSeed());
             builder.ApplyConfiguration(new ProductSeed());
             builder.ApplyConfiguration(new ProductCategorySeed());
+            builder.ApplyConfiguration(new UserClaimSeed());
+            builder.ApplyConfiguration(new RestaurantProductSeed());
         }
     }
 }

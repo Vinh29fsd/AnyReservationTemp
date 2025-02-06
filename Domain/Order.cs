@@ -2,8 +2,7 @@
 {
     public class Order : BaseDomainModel
     {
-        public DateTime OrderDateTime { get; set; }
-        public int ProductId { get; set; }
-        public int CustomerId { get; set; }
+        public double TotalAmount { get; set; }
+        public int ResevationId { get; set; }
     }
 }

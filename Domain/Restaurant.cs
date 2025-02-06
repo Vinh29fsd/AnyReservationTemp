@@ -6,5 +6,7 @@ namespace AnyReservationTemp.Domain
     {
         public string? Location { get; set; }
         public string? ImagePath { get; set; }
+        public string? CreatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
     }
 }
