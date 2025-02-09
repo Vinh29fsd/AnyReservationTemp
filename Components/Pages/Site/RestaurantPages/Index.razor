@@ -48,6 +48,24 @@
                     <p><strong>Location:</strong> @restaurant.Location</p>
                     <p><strong>Contact:</strong> @restaurant.Contact</p>
                     <p><strong>Email:</strong> @restaurant.EmailAddress</p>
+                    <p><strong>Status: </strong>
+                        @if (restaurant.ServiceStatus)
+                        {
+                            <span style="color: green;">Active</span>
+                        }
+                        else
+                        {
+                            <span style="color: red;">Out of Service</span>
+                            @if (isUser)
+                            {
+                            <p style="color: red;">This restaurant is currently out of service. Please contact the restaurant at @restaurant?.Contact or via email at @restaurant?.EmailAddress for further inquiries.</p>
+                            }
+                            else
+                            {
+                            <p style="color: red;">This restaurant is currently out of service. Please update the status to active when the restaurant is operational again.</p>
+                            }
+                        }
+                    </p>
                     <AuthorizeView Roles="Administrator">
                         <p>Created By:<strong>@restaurant.CreatedBy</strong></p>
                     </AuthorizeView>
@@ -60,14 +78,21 @@
                     <div class="restaurant-actions">
                         <a class="btn btn-primary btn-success" href="/reservations/create?restaurantId=@restaurant.Id">Reserve now!</a>
                         <a class="btn btn-info" href="@($"restaurants/details?id={restaurant.Id}")">Details</a>
-                        <a class="btn btn-primary"href="@($"restaurants/edit?id={restaurant.Id}")">Edit</a> 
-                        <a class="btn btn-danger" href="@($"restaurants/delete?id={restaurant.Id}")">Del</a>
+                        <a class="btn btn-primary"href="@($"restaurants/edit?id={restaurant.Id}")">Edit</a>
                     </div>
                 }
                 else
                 {
                     <div class="restaurant-actions">
-                        <a class="btn btn-primary btn-success" onclick="location.href='/reservations/create?restaurantId=@restaurant.Id'">Reserve now!</a>
+                        @if (restaurant.ServiceStatus)
+                        {
+                            <a class="btn btn-primary btn-success" href="/reservations/create?restaurantId=@restaurant.Id">Reserve now!</a>
+                        }
+                        else
+                        {
+                            <!-- Show Out of Service button -->
+                            <a class="btn btn-danger" style="pointer-events: none;" href="javascript:void(0);">Out of Service</a>
+                        }
                         <a class="btn btn-info" href="@($"restaurants/details?id={restaurant.Id}")">Details</a>
                     </div>
                 }

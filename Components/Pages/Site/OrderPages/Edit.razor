@@ -4,6 +4,7 @@
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 @inject NavigationManager NavigationManager
 
+
 <PageTitle>Edit</PageTitle>
 <!-- Filler -->
 <div class="container-fluid d-flex flex-wrap w-100 py-2">
@@ -31,10 +32,60 @@
                             <li class="mb-2">
                                 @product.Name x @detail.Quantity - Total : $@(@detail.Quantity * @product.Cost)
                                 <div class="d-flex justify-content-center mt-2">
-                                    <a href="/orderdetails/edit?id=@detail.Id&orderId=@Id" class="btn btn-secondary btn-sm mx-2">Edit</a>
-                                    <a href="/orderdetails/delete?id=@detail.Id&orderId=@Id" class="btn btn-danger btn-sm mx-2">Delete</a>
+                                    <!-- Edit Button Opens Modal -->
+                                    <button type="button" class="btn btn-secondary btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#editModal_@detail.Id">Edit</button>
+
+                                    <!-- Delete Button Opens Modal -->
+                                    <button type="button" class="btn btn-danger btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#deleteModal_@detail.Id">Delete</button>
                                 </div>
                             </li>
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editModal_@detail.Id" aria-labelledby="editModalLabel_@detail.Id" aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel_@detail.Id">Edit Order</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <iframe src="@($"/orderdetails/edit?id={detail.Id}&orderId={Id}&restaurantId={restaurantId}")" style="width: 100%; height: 200px; border: none;"></iframe>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete OrderDetail Modal (Unique ID) -->
+                            <div class="modal fade" id="deleteModal_@detail.Id" tabindex="-1" aria-labelledby="deleteModalLabel_@detail.Id" aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-danger" id="deleteModalLabel_@detail.Id">
+                                                <i class="bi bi-trash-fill"></i> Confirm Delete
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <p>Are you sure you want to delete this order item?</p>
+                                            <p><strong>Product:</strong> @product.Name</p>
+                                            <p><strong>Quantity:</strong> @detail.Quantity</p>
+                                        </div>
+
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <!-- Using EditForm for Delete -->
+                                            @{
+                                                var deleteFormName = $"deleteOrderDetails_{detail.Id.ToString()}";
+                                            }
+                                            <EditForm Model="detail" OnValidSubmit="@(async () => await DeleteOrderDetail(detail.Id))" FormName="@deleteFormName">
+                                                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                            </EditForm>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         }
                     }
                 </ul>
@@ -59,7 +110,7 @@
         else
         {
             <div class="row d-flex justify-content-center">
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <EditForm method="post" Model="Order" OnValidSubmit="UpdateOrder" FormName="edit" Enhance>
                         <DataAnnotationsValidator />
                         <ValidationSummary role="alert" />
@@ -76,7 +127,8 @@
                         </div>
 
                         <div class="d-flex justify-content-center mt-3">
-                            <button type="submit" class="btn btn-primary">Confirm</button>
+                            <a href="/products?orderId=@Id&restaurantId=@restaurantId" class="btn btn-success mx-2">Add More Order</a>
+                            <button type="submit" class="btn btn-primary mx-2">Confirm</button>
                         </div>
                     </EditForm>
                 </div>
@@ -88,6 +140,9 @@
 @code {
     [SupplyParameterFromQuery]
     private int Id { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int restaurantId { get; set; }
 
     [SupplyParameterFromForm]
     private Order? Order { get; set; }
@@ -153,7 +208,19 @@
 
         NavigationManager.NavigateTo("/reservations");
     }
+    private async Task DeleteOrderDetail(int orderDetailId)
+    {
+        using var context = DbFactory.CreateDbContext();
+        var orderdetail = await context.OrderDetail.FirstOrDefaultAsync(m => m.Id == orderDetailId);
 
+        if (orderdetail is not null)
+        {
+            context.OrderDetail.Remove(orderdetail);
+            await context.SaveChangesAsync();
+        }
+
+        NavigationManager.NavigateTo($"/orders/edit?id={Id}&restaurantId={restaurantId}");
+    }
     private bool OrderExists(int id)
     {
         using var context = DbFactory.CreateDbContext();

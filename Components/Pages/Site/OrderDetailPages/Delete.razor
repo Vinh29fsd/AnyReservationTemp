@@ -32,7 +32,7 @@
         <EditForm method="post" Model="orderdetail" OnValidSubmit="DeleteOrderDetail" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(orderdetail is null)">Yes</button>
         </EditForm>
-        <button href="@($"orders/edit?id={OrderId}")">Cancel</button>
+        <button onclick="location.href='@($"orders/edit?id={OrderId}&restaurantId={restaurantId}")'">Cancel</button>
     }
 </div>
 
@@ -41,6 +41,8 @@
 
     [SupplyParameterFromQuery]
     private int Id { get; set; }
+    [SupplyParameterFromQuery]
+    private int restaurantId { get; set;}
 
     [SupplyParameterFromQuery]
     private int OrderId { get; set; }

@@ -4,15 +4,15 @@
 @using AnyReservationTemp.Data
 @inject IDbContextFactory<AnyReservationTempContext> DbFactory
 
+<!-- Include other necessary imports -->
+
 <PageTitle>Orders</PageTitle>
+
 <!-- Filler -->
 <div class="container-fluid d-flex flex-wrap w-100 py-2">
-    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+    <a style="color: #fff3f1;" class="btn px-4 py-3 m-2 rounded-pill" href="#">Space</a>
 </div>
-<!-- Filler -->
-<div class="container-fluid d-flex flex-wrap w-100 py-2">
-    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
-</div>
+
 <body style="background-color: #fff3f1">
     <div class="container">
         <a class="btn btn-secondary" href="reservations">
@@ -35,32 +35,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var detail in OrderDetails)
+                    @foreach (var categoryGroup in OrderDetails.GroupBy(od => Products.FirstOrDefault(p => p.Id == od.ProductId)?.ProductCategoryId))
                     {
-                        var product = Products.FirstOrDefault(p => p.Id == detail.ProductId);
-                        if (product != null)
-                        {
-                            double total = detail.Quantity * product.Cost;
+                        <tr>
+                            <td colspan="4" class="fw-bold">
+                                @ProductCategories.FirstOrDefault(pc => pc.Id == categoryGroup.Key)?.Category
+                            </td>
+                        </tr>
 
-                            <tr>
-                                <td>@product.Name</td>
-                                <td>@detail.Quantity</td>
-                                <td>$@($"{total:F2}")</td>
-                            </tr>
+                        @foreach (var detail in categoryGroup)
+                        {
+                            var product = Products.FirstOrDefault(p => p.Id == detail.ProductId);
+                            if (product != null)
+                            {
+                                double total = detail.Quantity * product.Cost;
+
+                                <tr>
+                                    <td>@product.Name</td>
+                                    <td>@detail.Quantity</td>
+                                    <td>$@($"{total:F2}")</td>
+                                </tr>
+                            }
                         }
                     }
                 </tbody>
             </table>
             <hr>
-            <!-- Total Sum Section at the bottom right -->
             <div class="d-flex justify-content-end mt-3">
                 <div>
                     <strong>Subtotal: </strong>
                     $@($"{GetOrderTotalSum(Orders.FirstOrDefault().Id):F2}")
                 </div>
             </div>
-
-            <!-- Service Charge and Down Payment Below -->
             <div class="d-flex justify-content-end mt-3">
                 <div>
                     <strong>Service Charge (5%): </strong>
@@ -79,8 +85,6 @@
                     $@Orders.FirstOrDefault(t => t.Id == t.Id).TotalAmount
                 </div>
             </div>
-            <div class="mt-4">
-            </div>
         }
         else
         {
@@ -89,7 +93,6 @@
     </div>
 </body>
 
-
 @code {
     [SupplyParameterFromQuery]
     private int? ReservationId { get; set; }
@@ -97,6 +100,7 @@
     private List<Order> Orders = new();
     private List<OrderDetail> OrderDetails = new();
     private List<Product> Products = new();
+    private List<ProductCategory> ProductCategories = new();  // To hold the Product Categories
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,8 +115,12 @@
         var orderIds = Orders.Select(o => o.Id).ToList();
         OrderDetails = await context.OrderDetail.Where(od => orderIds.Contains(od.OrderId)).ToListAsync();
 
-        // Fetch Products
+        // Fetch Products (with ProductCategoryId) from the Products table
         Products = await context.Product.ToListAsync();
+
+        // Fetch ProductCategories (assuming they are in another DbContext or table)
+        // Here we assume another context or table for categories
+        ProductCategories = await context.ProductCategory.ToListAsync();
     }
 
     // Helper method to calculate the total sum of the products in an order

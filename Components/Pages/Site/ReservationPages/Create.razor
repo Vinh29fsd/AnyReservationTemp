@@ -41,7 +41,7 @@
                         <ValidationSummary class="text-danger" role="alert" />
                         <div class="mb-3">
                             <label for="restaurantid" class="form-label">Restaurant:</label>
-                            <InputSelect id="restaurantid" @bind-Value="restaurantId" class="form-control">
+                            <InputSelect disabled id="restaurantid" @bind-Value="restaurantId" class="form-control">
                                 <option value="">-- Select restaurant --</option>
                                 @if ( Restaurants!= null)
                                 {
@@ -55,17 +55,17 @@
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name:</label>
-                            <InputText id="name" @bind-Value="Reservation.Name" class="form-control" />
+                            <InputText disabled="@(!isAdmin && !isStaff)" id="name" @bind-Value="Reservation.Name" class="form-control" />
                             <ValidationMessage For="() => Reservation.Name" class="text-danger" />
                         </div>
                         <div class="mb-3">
-                            <label for="contact" class="form-label">Phone Number:</label>
-                            <InputText id="contact" @bind-Value="Reservation.Contact" class="form-control" />
+                            <label  for="contact" class="form-label">Phone Number:</label>
+                            <InputText disabled="@(!isAdmin && !isStaff)" id="contact" @bind-Value="Reservation.Contact" class="form-control" />
                             <ValidationMessage For="() => Reservation.Contact" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="emailaddress" class="form-label">Email:</label>
-                            <InputText id="emailaddress" @bind-Value="Reservation.EmailAddress" class="form-control" />
+                            <InputText disabled="@(!isAdmin && !isStaff)" id="emailaddress" @bind-Value="Reservation.EmailAddress" class="form-control" />
                             <ValidationMessage For="() => Reservation.EmailAddress" class="text-danger" />
                         </div>
                         <div class="mb-3">
@@ -75,7 +75,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="datereserved" class="form-label">Date of Reservation:</label>
-                            <InputDate id="datereserved" @bind-Value="Reservation.DateReserved" class="form-control" />
+                            <InputDate id="datereserved" @bind-Value="Reservation.DateReserved" class="form-control"
+                                       min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             <ValidationMessage For="() => Reservation.DateReserved" class="text-danger" />
                         </div>
                         <div class="row">
@@ -171,6 +172,8 @@
 
     private bool isAdmin = false;
 
+    private bool isStaff = false;
+
     //Declare and initialize
     private AnyReservationTempContext context = default!;
     private Restaurant selectedRestaurant;
@@ -209,6 +212,7 @@
         var user = authState.User;
 
         isAdmin = user.IsInRole("Administrator");
+        isStaff = user.IsInRole("RestaurantStaff");
 
         // Get the userId claim
         var userIdClaim = user.FindFirst("userId");
@@ -223,6 +227,28 @@
 
         Reservation.ProgressId = 2;
         Reservation.RestaurantId = restaurantId;
+
+        if (Reservation.DateReserved == default)
+        {
+            Reservation.DateReserved = DateTime.Now;
+        }
+
+        var userInfo = await context.Users
+    .Where(u => u.Id == userId)
+    .Select(u => new
+    {
+        FullName = u.FirstName + " " + u.LastName,
+        u.PhoneNumber,
+        u.Email
+    })
+    .FirstOrDefaultAsync();
+
+        if (userInfo != null)
+        {
+            Reservation.Name = userInfo.FullName;
+            Reservation.Contact = userInfo.PhoneNumber;
+            Reservation.EmailAddress = userInfo.Email;
+        }
     }
 }
 

@@ -77,6 +77,9 @@
     [SupplyParameterFromQuery]
     private int restaurantId { get; set; }
 
+    [SupplyParameterFromQuery]
+    private int CategoryId { get; set; }
+
     [SupplyParameterFromForm]
     private Product Product { get; set; } = new();
 
@@ -90,6 +93,10 @@
         using var context = DbFactory.CreateDbContext();
         ProductCategories = await context.ProductCategory.ToListAsync();
         RestaurantProduct.RestaurantId = restaurantId;
+        if (Product.ProductCategoryId == default)
+        {
+            Product.ProductCategoryId = CategoryId;
+        }
     }
 
     private async Task AddProduct()
@@ -100,6 +107,7 @@
 
         RestaurantProduct.ProductId = Product.Id;
         RestaurantProduct.RestaurantId = restaurantId;
+
 
         context.RestaurantProductCategory.Add(RestaurantProduct);
         await context.SaveChangesAsync();

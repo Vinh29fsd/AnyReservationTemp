@@ -10,37 +10,68 @@
 
 <PageTitle>Products</PageTitle>
 
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
+
 <body style="background-color: #fff3f1;">
-    <h1 class="text-center">Available Products</h1>
+    <h1 class="text-center">Available Products Updates for @restaurantName</h1>
     <hr>
-
-    <div class="product-container">
-        <!-- Plus Sign Card for Adding Products -->
-        <div class="product-card add-product" onclick="location.href='@($"products/create?restaurantId={restaurantId}")'">
-            <span class="plus-sign">+</span>
+    @if (!Products.Any())
+    {
+        <div class="text-center my-4">
+            <h4>No products available for this restaurant. Add a new product!</h4>
+            <button class="btn btn-success" onclick="location.href='@($"products/create?restaurantId={restaurantId}")'">Add Product</button>
         </div>
-
-        @foreach (var product in Products)
+    }
+    else
+    {
+        @foreach (var categoryGroup in Products.GroupBy(p => p.ProductCategoryId))
         {
-            <div class="product-card">
-                <!-- Delete Icon -->
-                <span class="delete-icon" onclick="location.href='@($"products/delete?Id={product.Id}&restaurantId={restaurantId}")'">&Chi; </span>
+            var category = Category.FirstOrDefault(c => c.Id == categoryGroup.Key);
+            if (category != null)
+            {
+                <div class="category-container">
+                    <h3 class="text-center fw-bold">@category.Category</h3>
+                    <div class="product-container">
+                        <!-- Plus Sign Card for Adding Products -->
+                        <div class="product-card add-product" onclick="location.href='@($"products/create?restaurantId={restaurantId}&CategoryId={category.Id}")'">
+                            <span class="plus-sign">+</span>
+                        </div>
 
-                <h3>@product.Name</h3>
-                <p>Category: @Category.FirstOrDefault(c => c.Id == product.ProductCategoryId)?.Category</p>
-                <p>Cost: $@product.Cost</p>
-                <p>Quantity: @product.Quantity</p>
+                        @foreach (var product in categoryGroup)
+                        {
+                            <div class="product-card">
+                                <h3>@product.Name</h3>
+                                <p>Category: @category.Category</p>
+                                <p>Cost: $@product.Cost</p>
+                                <p>Quantity: @product.Quantity</p>
 
-                <!-- Edit Button -->
-                <button class="btn btn-edit" onclick="location.href='@($"products/edit?Id={product.Id}&restaurantId={restaurantId}")'">Edit</button>
-            </div>
+                                <!-- Edit Button -->
+                                <button class="btn btn-edit" onclick="location.href='@($"products/edit?Id={product.Id}&restaurantId={restaurantId}")'">Edit</button>
+
+                                <!-- Delete Button (Optional) -->
+                                <button hidden class="btn btn-danger" onclick="DeleteProduct(@product.Id)">Delete</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         }
-    </div>
+    }
 </body>
 
 @code {
     [SupplyParameterFromQuery]
     private int restaurantId { get; set; }
+
+    private string restaurantName;
 
     private AnyReservationTempContext context = default!;
     private List<Product> Products { get; set; } = new();
@@ -50,6 +81,7 @@
     {
         context = DbFactory.CreateDbContext();
         Category = context.ProductCategory.ToList();
+        restaurantName = context.Restaurant.FirstOrDefault(n => n.Id == restaurantId).Name;
 
         var productIdsForRestaurant = context.RestaurantProductCategory
             .Where(rp => rp.RestaurantId == restaurantId)

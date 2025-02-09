@@ -23,7 +23,7 @@
                 <div class="mb-3 text-center">
                     <label for="quantity" class="form-label">@Products.FirstOrDefault(p => p.Id == productId).Name</label>
                     <div class="d-flex justify-content-center align-items-center">
-                        <InputNumber style="width: 80px; text-align: center;" id="quantity" @bind-Value="OrderDetail.Quantity" class="form-control" />
+                        <InputNumber style="width: 80px; text-align: center;" id="quantity" @bind-Value="OrderDetail.Quantity" class="form-control" min="1" max="@products?.Quantity" />
                     </div>
                     <ValidationMessage For="() => OrderDetail.Quantity" class="text-danger" />
                 </div>
@@ -55,7 +55,7 @@
 
     private IList<Product> Products { get; set; }
     private double totalAmount { get; set; } = 0;
-    private Product price { get; set; }
+    private Product products { get; set; }
 
     protected override void OnInitialized()
     {
@@ -63,7 +63,7 @@
         OrderDetail.ProductId = productId;
         OrderDetail.OrderId = orderId;
         Products = context.Product.ToList();
-        price = Products.FirstOrDefault(c => c.Id == productId);
+        products = Products.FirstOrDefault(c => c.Id == productId);
     }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.

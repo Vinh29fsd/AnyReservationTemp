@@ -7,58 +7,83 @@
 @inject NavigationManager NavManager
 
 <PageTitle>Products</PageTitle>
-<!-- Filler -->
-<div class="container-fluid d-flex flex-wrap w-100 py-2">
-    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
-</div>
+
 <!-- Filler -->
 <div class="container-fluid d-flex flex-wrap w-100 py-2">
     <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
 </div>
 
+<!-- Filler -->
+<div class="container-fluid d-flex flex-wrap w-100 py-2">
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+</div>
 
 <body style="background-color: #fff3f1;">
-    <h1 class="text-center">Available Products</h1>
+    <h1 class="text-center">Available Products for @restaurantName</h1>
 
     <hr>
 
-    <div class="product-container">
-        @foreach (var product in Products)
+    @foreach (var categoryGroup in Products.GroupBy(p => p.ProductCategoryId))
+    {
+        var category = Category.FirstOrDefault(c => c.Id == categoryGroup.Key);
+        if (category != null)
         {
-            <div class="product-card">
-                <h3>@product.Name</h3>
-                <p>Category: @Category.FirstOrDefault(c => c.Id == product.ProductCategoryId)?.Category</p>
-                <p>Cost: $@product.Cost</p>
-                <p>Quantity: @product.Quantity</p>
+            <div class="row">
+                <div class="category-container">
+                    <h3 class="text-center fw-bold">@category.Category</h3>
+                    <div class="product-container">
+                        @foreach (var product in categoryGroup)
+                        {
+                            <div class="product-card">
+                                <h4>@product.Name</h4>
+                                <p>Category: @category.Category</p>
+                                <p>Cost: $@product.Cost</p>
+                                <p>Quantity: @product.Quantity</p>
 
-                <!-- Button to Open Modal (Unique ID) -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal_@product.Id">
-                    Order Now
-                </button>
-            </div>
+                                @if (product.Quantity == 0)
+                                {
+                                    <button type="button" class="btn btn-danger" disabled>Sold Out</button>
+                                }
+                                else
+                                {
+                                    <!-- Button to Open Modal (Unique ID) -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal_@product.Id">
+                                        Order Now
+                                    </button>
+                                }
+                            </div>
 
-            <!-- Modal (Unique ID for Each Product) -->
-            <div class="modal fade" id="orderModal_@product.Id" aria-labelledby="orderModalLabel_@product.Id" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="orderModalLabel_@product.Id">Order - @product.Name</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Embedded Webpage for Ordering -->
-                            <iframe src="@($"/orderdetails/create?orderId={OrderId}&productId={product.Id}")" style="width: 100%; height: 600px; border: none;"></iframe>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">Close</button>
-                        </div>
+                            @if (product.Quantity > 0)
+                            {
+                                <!-- Modal (Unique ID for Each Product) -->
+                                <div class="modal fade" id="orderModal_@product.Id" aria-labelledby="orderModalLabel_@product.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="orderModalLabel_@product.Id">Order - @product.Name</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Embedded Webpage for Ordering -->
+                                                <iframe src="@($"/orderdetails/create?orderId={OrderId}&productId={product.Id}")" style="width: 300px; height: 300px; border: none;"></iframe>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
                     </div>
+
                 </div>
             </div>
         }
-    </div>
+    }
 
-    <a href="/orders/edit?id=@OrderId" class="checkout-btn btn btn-success ">Checkout</a>
+
+    <a href="/orders/edit?id=@OrderId&restaurantId=@restaurantId" class="checkout-btn btn btn-success ">Checkout</a>
 </body>
 
 @code {
@@ -68,6 +93,7 @@
     [SupplyParameterFromQuery]
     private int restaurantId { get; set; }
 
+    private string restaurantName { get; set; }
 
     private AnyReservationTempContext context = default!;
     private List<Product> Products { get; set; } = new();
@@ -78,13 +104,15 @@
         context = DbFactory.CreateDbContext();
         Category = context.ProductCategory.ToList();
 
+        restaurantName = context.Restaurant.FirstOrDefault(n => n.Id == restaurantId).Name;
+
         var productIdsForRestaurant = context.RestaurantProductCategory
             .Where(rp => rp.RestaurantId == restaurantId)
             .Select(rp => rp.ProductId)
             .ToList();
 
         Products = context.Product
-            .Where(p => productIdsForRestaurant.Contains(p.Id)) 
+            .Where(p => productIdsForRestaurant.Contains(p.Id))
             .ToList();
     }
 

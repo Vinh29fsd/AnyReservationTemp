@@ -11,3 +11,45 @@
     background-color: #ddd;
     margin: 15px 0;
 }
+
+/* Fix Scrolling Issue on Modal Open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Custom Modal Content Styling */
+.modal-content {
+    background: #fff3f1;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Small Modal Size */
+.modal-dialog.modal-sm {
+    max-width: 350px;
+    max-height: 350px;
+}
+
+/* Modal Header Styling */
+.modal-header {
+    background-color: #f9bfbf;
+    border-bottom: none;
+    padding: 10px;
+}
+
+/* Modal Close Button */
+.modal .btn-close {
+    color: black;
+    opacity: 1;
+    font-size: 1.2rem;
+}
+
+/* Ensure iframe inside modal is scrollable */
+.modal-body iframe {
+    width: 100%;
+    height: 300px;
+    border: none;
+    pointer-events: auto;
+}

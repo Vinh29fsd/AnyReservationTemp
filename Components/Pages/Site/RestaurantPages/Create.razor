@@ -4,26 +4,41 @@
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 @inject NavigationManager NavigationManager
 
+@attribute [Authorize(Roles = "Administrator, RestaurantStaff")]
+
 <PageTitle>Create</PageTitle>
 <!-- Filler -->
-<div class="container-fluid d-flex flex-wrap w-100 py-2">
+<div class="container-fluid d-flex flex-wrap w-100 py-2 justify-content-center">
     <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
 </div>
-<body style="background-color: #fff3f1">
-    <h1>Create</h1>
 
-    <h2>Restaurant</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
+<body style="background-color: #fff3f1;">
+    <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+        <h1>Create</h1>
+        <h2>Restaurant</h2>
+
+        <hr class="w-50" />
+
+        <div class="col-md-6">
             <EditForm method="post" Model="Restaurant" OnValidSubmit="AddRestaurant" FormName="create" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary class="text-danger" role="alert" />
+                
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" />
-                    <ValidationMessage For="() => Restaurant.Name" class="text-danger" />
+                    <div class="d-flex align-items-center">
+                        <div class="w-75 pe-2">
+                            <label for="name" class="form-label">Name:</label>
+                            <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" />
+                            <ValidationMessage For="() => Restaurant.Name" class="text-danger" />
+                        </div>
+                        <div class="d-flex align-items-center ms-3">
+                            <label for="isActive" class="form-label mb-0 pe-2">Is Active:</label>
+                            <InputCheckbox id="isActive" @bind-Value="Restaurant.ServiceStatus" class="form-check-input" />
+                            <ValidationMessage For="() => Restaurant.ServiceStatus" />
+                        </div>
+                    </div>
                 </div>
+
                 <div class="mb-3">
                     <label for="location" class="form-label">Location:</label>
                     <InputText id="location" @bind-Value="Restaurant.Location" class="form-control" />
@@ -45,15 +60,20 @@
                     <InputText id="imagepath" @bind-Value="Restaurant.ImagePath" class="form-control" />
                     <ValidationMessage For="() => Restaurant.ImagePath" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Create</button>
+
+                <div style="padding-bottom: 60px;"></div>
+
+                <div class="d-flex justify-content-between" style="position: relative;">
+                    <a href="/restaurants" class="btn btn-secondary position-absolute bottom-0 start-0 mb-3">
+                        <i class="bi bi-arrow-left"></i> Back to Restaurant
+                    </a>
+                    <button type="submit" class="btn btn-primary position-absolute bottom-0 end-0 mb-3">Create</button>
+                </div>
             </EditForm>
         </div>
     </div>
-
-    <div>
-        <a href="/restaurants">Back to List</a>
-    </div>
 </body>
+
 @code {
     [SupplyParameterFromForm]
     private Restaurant Restaurant { get; set; } = new();
@@ -64,16 +84,16 @@
         Restaurant.CreatedBy = staffId;
         Restaurant.UpdatedBy = staffId;
 
-
         using var context = DbFactory.CreateDbContext();
         context.Restaurant.Add(Restaurant);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/restaurants");
     }
-    //Create userId string to store the user id, default value is "System".
+
+    // Create userId string to store the user id, default value is "System".
     private string staffId = "Admin";
 
-    //Inject the AuthenticationStateProvider to get the user id.
+    // Inject the AuthenticationStateProvider to get the user id.
     @inject AuthenticationStateProvider authenticationStateProvider
 
     protected override async void OnInitialized()

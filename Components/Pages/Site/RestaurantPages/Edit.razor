@@ -4,7 +4,7 @@
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Administrator, Restaurantstaff")]
+@attribute [Authorize(Roles = "Administrator, RestaurantStaff")]
 
 <PageTitle>Edit</PageTitle>
 <!-- Filler -->
@@ -35,9 +35,18 @@
                     <ValidationSummary role="alert" />
                     <input type="hidden" name="Restaurant.Id" value="@Restaurant.Id" />
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name:</label>
-                        <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" />
-                        <ValidationMessage For="() => Restaurant.Name" class="text-danger" />
+                        <div class="d-flex align-items-center">
+                            <div class="w-75 pe-2">
+                                <label for="name" class="form-label">Name:</label>
+                                <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" />
+                                <ValidationMessage For="() => Restaurant.Name" class="text-danger" />
+                            </div>
+                            <div class="d-flex align-items-center ms-3">
+                                <label for="isActive" class="form-label mb-0 pe-2">Is Active:</label>
+                                <InputCheckbox id="isActive" @bind-Value="Restaurant.ServiceStatus" class="form-check-input" />
+                                <ValidationMessage For="() => Restaurant.ServiceStatus" />
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="location" class="form-label">Location:</label>

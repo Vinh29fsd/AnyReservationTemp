@@ -75,15 +75,22 @@
                         <InputDate id="datereserved" @bind-Value="Reservation.DateReserved" class="form-control" />
                         <ValidationMessage For="() => Reservation.DateReserved" class="text-danger" />
                     </div>
-                    <div class="mb-3">
-                        <label for="starttime" class="form-label">StartTime:</label>
-                        <InputDate Type="InputDateType.Time" id="starttime" @bind-Value="Reservation.StartTime" class="form-control" />
-                        <ValidationMessage For="() => Reservation.StartTime" class="text-danger" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="endtime" class="form-label">EndTime:</label>
-                        <InputDate Type="InputDateType.Time" id="endtime" @bind-Value="Reservation.EndTime" class="form-control" />
-                        <ValidationMessage For="() => Reservation.EndTime" class="text-danger" />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="starttime" class="form-label">StartTime:</label>
+                                <InputDate Type="InputDateType.Time" id="starttime" @bind-Value="Reservation.StartTime" class="form-control" />
+                                <ValidationMessage For="() => Reservation.StartTime" class="text-danger" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="endtime" class="form-label">EndTime:</label>
+                                <InputDate Type="InputDateType.Time" id="endtime" @bind-Value="Reservation.EndTime" class="form-control" />
+                                <ValidationMessage For="() => Reservation.EndTime" class="text-danger" />
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3" hidden>
                         <label for="customerid" class="form-label">CustomerId:</label>
@@ -113,7 +120,7 @@
                             <ValidationMessage For="() => Reservation.ProgressId" class="text-danger" />
                         </div>
                     }
-                    <div class="mb-3">
+                    <div class="mb-3" hidden>
                         <label for="datecreated" class="form-label">DateCreated:</label>
                         <InputDate id="datecreated" @bind-Value="Reservation.DateCreated" class="form-control" />
                         <ValidationMessage For="() => Reservation.DateCreated" class="text-danger" />

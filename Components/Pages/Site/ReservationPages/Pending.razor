@@ -12,7 +12,7 @@
 
 <!-- Filler -->
 <div class="container-fluid d-flex flex-wrap w-100 py-3">
-    <a style="color: #fff3f1"class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+    <a style="color: #fff3f1" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
 </div>
 
 <body>
@@ -24,6 +24,7 @@
     {
         <h1>Your Reservations</h1>
     }
+
     <div class="btn-group mb-3">
         <button class="btn btn-outline-warning" onclick="location.href='reservations'">Pending</button>
         <button class="btn btn-outline-success" onclick="location.href='reservations/approved'">Approved</button>
@@ -31,17 +32,22 @@
     </div>
     <hr>
 
+    <!-- Upcoming Reservations Header -->
+    <h3>Upcoming Reservations</h3>
     <div class="reservation-container">
         <div class="reservation-box create-new-box" onclick="location.href='restaurants'">
             <div class="create-new-icon">
                 <span class="plus-icon">+</span>
             </div>
         </div>
-        @foreach (var reservation in FilteredReservations.ToList())
+        @foreach (var reservation in FilteredReservations.Where(r => r.DateReserved >= DateTime.Now && r.DateReserved <= DateTime.Now.AddMonths(3)).OrderBy(r => r.DateReserved).ToList())
         {
+            var restaurant = Restaurants.FirstOrDefault(r => r.Id == reservation.RestaurantId);
+            var isServiceActive = restaurant?.ServiceStatus ?? false;
+
             if (ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description == "Pending")
             {
-                <div class="reservation-box">
+                <div class="reservation-box @(isServiceActive ? "" : "disabled-card")">
                     <h3>@reservation.Name</h3>
                     <p><strong>Contact:</strong> @reservation.Contact</p>
                     <p><strong>Email:</strong> @reservation.EmailAddress</p>
@@ -49,13 +55,26 @@
                     <p><strong>Start Time:</strong> @reservation.StartTime</p>
                     <p><strong>End Time:</strong> @reservation.EndTime</p>
                     <p hidden><strong>Table No:</strong> @reservation.TableNo</p>
-                    <p><strong>Restaurant:</strong> @Restaurants.FirstOrDefault(r => r.Id == reservation.RestaurantId)?.Name </p>
+                    <p><strong>Restaurant:</strong> @restaurant?.Name</p>
                     <p><strong>Status:</strong> @ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description </p>
-                    <p><strong>Date Created:</strong> @reservation.DateCreated</p>
+
+                    @if (!isServiceActive)
+                    {
+                        <p style="color: red;">
+                            @if (isUser)
+                            {
+                                @:This restaurant is currently out of service. Please contact the restaurant at @restaurant?.Contact or via email at @restaurant?.EmailAddress for further inquiries.
+                            }
+                            else if (isAdmin || isStaff)
+                            {
+                                @:This restaurant is currently out of service. Please update the status to active when the restaurant is operational again.
+                            }
+                        </p>
+                    }
+
                     <AuthorizeView Roles="Administrator">
                         <p><strong>Created By:</strong> @reservation.CreatedBy</p>
                     </AuthorizeView>
-
 
                     <div class="reservation-actions">
                         <button class="btn btn-primary" onclick="location.href='@($"reservations/edit?id={reservation.Id}")'">Edit</button>
@@ -70,6 +89,117 @@
             }
         }
     </div>
+
+    <hr>
+
+    <!-- Later Reservations Header -->
+    <h3>Later Reservations</h3>
+    <div class="reservation-container">
+        @foreach (var reservation in FilteredReservations.Where(r => r.DateReserved > DateTime.Now.AddMonths(3)).OrderBy(r => r.DateReserved).ToList())
+        {
+            var restaurant = Restaurants.FirstOrDefault(r => r.Id == reservation.RestaurantId);
+            var isServiceActive = restaurant?.ServiceStatus ?? false;
+
+            if (ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description == "Pending")
+            {
+                <div class="reservation-box @(isServiceActive ? "" : "disabled-card")">
+                    <h3>@reservation.Name</h3>
+                    <p><strong>Contact:</strong> @reservation.Contact</p>
+                    <p><strong>Email:</strong> @reservation.EmailAddress</p>
+                    <p><strong>Date Reserved:</strong> @reservation.DateReserved.ToShortDateString()</p>
+                    <p><strong>Start Time:</strong> @reservation.StartTime</p>
+                    <p><strong>End Time:</strong> @reservation.EndTime</p>
+                    <p hidden><strong>Table No:</strong> @reservation.TableNo</p>
+                    <p><strong>Restaurant:</strong> @restaurant?.Name</p>
+                    <p><strong>Status:</strong> @ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description </p>
+
+                    @if (!isServiceActive)
+                    {
+                        <p style="color: red;">
+                            @if (isUser)
+                            {
+                                @:This restaurant is currently out of service. Please contact the restaurant at @restaurant?.Contact or via email at @restaurant?.EmailAddress for further inquiries.
+                            }
+                            else if (isAdmin || isStaff)
+                            {
+                                @:This restaurant is currently out of service. Please update the status to active when the restaurant is operational again.
+                            }
+                        </p>
+                    }
+
+                    <AuthorizeView Roles="Administrator">
+                        <p><strong>Created By:</strong> @reservation.CreatedBy</p>
+                    </AuthorizeView>
+
+                    <div class="reservation-actions">
+                        <button class="btn btn-primary" onclick="location.href='@($"reservations/edit?id={reservation.Id}")'">Edit</button>
+                        <button class="btn btn-info" onclick="location.href='@($"reservations/details?id={reservation.Id}")'">Details</button>
+                        <button class="btn btn-info" onclick="location.href='@($"orders?reservationId={reservation.Id}")'">Orders</button>
+                        @if (isAdmin || isStaff)
+                        {
+                            <button style="margin-left: 3px" class="btn btn-secondary btn-danger" onclick="location.href='@($"reservations/delete?id={reservation.Id}")'">Delete</button>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <hr>
+
+    <!-- Past Reservations Header -->
+    <h3>Past Reservations</h3>
+    <div class="reservation-container">
+        @foreach (var reservation in FilteredReservations.Where(r => r.DateReserved < DateTime.Now).OrderBy(r => r.DateReserved).ToList())
+        {
+            var restaurant = Restaurants.FirstOrDefault(r => r.Id == reservation.RestaurantId);
+            var isServiceActive = restaurant?.ServiceStatus ?? false;
+
+            if (ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description == "Pending")
+            {
+                <div class="reservation-box @(isServiceActive ? "" : "disabled-card")">
+                    <h3>@reservation.Name</h3>
+                    <p><strong>Contact:</strong> @reservation.Contact</p>
+                    <p><strong>Email:</strong> @reservation.EmailAddress</p>
+                    <p><strong>Date Reserved:</strong> @reservation.DateReserved.ToShortDateString()</p>
+                    <p><strong>Start Time:</strong> @reservation.StartTime</p>
+                    <p><strong>End Time:</strong> @reservation.EndTime</p>
+                    <p hidden><strong>Table No:</strong> @reservation.TableNo</p>
+                    <p><strong>Restaurant:</strong> @restaurant?.Name</p>
+                    <p><strong>Status:</strong> @ProgressStatuses.FirstOrDefault(p => p.Id == reservation.ProgressId)?.Description </p>
+
+                    @if (!isServiceActive)
+                    {
+                        <p style="color: red;">
+                            @if (isUser)
+                            {
+                                @:This restaurant is currently out of service. Please contact the restaurant at @restaurant?.Contact or via email at @restaurant?.EmailAddress for further inquiries.
+                            }
+                            else if (isAdmin || isStaff)
+                            {
+                                @:This restaurant is currently out of service. Please update the status to active when the restaurant is operational again.
+                            }
+                        </p>
+                    }
+
+                    <AuthorizeView Roles="Administrator">
+                        <p><strong>Created By:</strong> @reservation.CreatedBy</p>
+                    </AuthorizeView>
+
+                    <div class="reservation-actions">
+                        <button class="btn btn-primary" onclick="location.href='@($"reservations/edit?id={reservation.Id}")'">Edit</button>
+                        <button class="btn btn-info" onclick="location.href='@($"reservations/details?id={reservation.Id}")'">Details</button>
+                        <button class="btn btn-info" onclick="location.href='@($"orders?reservationId={reservation.Id}")'">Orders</button>
+                        @if (isAdmin || isStaff)
+                        {
+                            <button style="margin-left: 3px" class="btn btn-secondary btn-danger" onclick="location.href='@($"reservations/delete?id={reservation.Id}")'">Delete</button>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
 </body>
 
 @code {
@@ -77,9 +207,10 @@
     private string userId = string.Empty;
     private bool isAdmin = false;
     private bool isStaff = false;
+    private bool isUser = false;
 
     private IQueryable<Restaurant> Restaurants => context.Restaurant;
-    private IQueryable<Status> ProgressStatuses => context.Status;  
+    private IQueryable<Status> ProgressStatuses => context.Status;
 
     [Inject]
     private AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
@@ -96,6 +227,7 @@
         userId = user.FindFirst("userId")?.Value ?? string.Empty;
         isAdmin = user.IsInRole("Administrator");
         isStaff = user.IsInRole("RestaurantStaff");
+        isUser = user.IsInRole("User");
 
         context = DbFactory.CreateDbContext();
     }

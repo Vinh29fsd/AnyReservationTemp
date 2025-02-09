@@ -62,3 +62,15 @@
 body {
     background-color: #fff3f1;
 }
+
+.disabled-card {
+    opacity: 0.5; /* Make the card appear faded */
+    pointer-events: none; /* Disable interaction with the card (buttons and clicks) */
+    background-color: #f5f5f5; /* Optional: Light gray background to indicate inactivity */
+    color: #888; /* Optional: Gray text to make it clear the card is inactive */
+}
+
+    .disabled-card .reservation-actions button {
+        pointer-events: none; /* Disable buttons inside the disabled card */
+        opacity: 0.5; /* Make the buttons look inactive */
+    }

@@ -4,6 +4,7 @@ using AnyReservationTemp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnyReservationTemp.Migrations
 {
     [DbContext(typeof(AnyReservationTempContext))]
-    partial class AnyReservationTempContextModelSnapshot : ModelSnapshot
+    [Migration("20250209080548_restaurantStatus")]
+    partial class restaurantStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ffe03d27-bc33-46b9-a8fb-9ed5433b99ab",
+                            ConcurrencyStamp = "52bbbcdc-032b-4cad-82f8-c797e75fef4c",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +108,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGYgubZiJw1R54BEntxL2vb84EyeenCsjgOYSbo6VndN0f9VKw+HRfhni8cas72vSg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOdKlpE209H/QP74K5u6o29wH14yIOwDTlkGWQI5N4Pb8Ez21xvjHnE5NAlTifpzPg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "058721c3-16fe-44b8-aefc-32c86df08a23",
+                            SecurityStamp = "b2783b1e-38c7-42f6-aff7-bd18b604fe44",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -115,7 +118,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "07f8ba5b-c88f-47fb-8405-43d39e3dc0fa",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "956b19c5-c53d-484b-a5b3-7b2e8b72757b",
+                            ConcurrencyStamp = "a5f9c4ca-b180-46f5-ad2d-e5dea1320096",
                             Email = "staff@restaurant.com",
                             EmailConfirmed = true,
                             FirstName = "Staff",
@@ -123,9 +126,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STAFF@RESTAURANT.COM",
                             NormalizedUserName = "STAFF@RESTAURANT.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEENtXPqoRmPlvzvWgVVVbCW8lBo3QvfpFPGetgH4dgzBxoa85u/IhRKGZANZHs05TQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH3259EJsOnzlX/Fe2fD1F35s5P9QGP8RZ0Zbmjg7SPyi9CpY91CFnq2kOtMBUowNA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8ae9f3ca-39fc-4ead-99c2-19f449edab31",
+                            SecurityStamp = "27f41c67-1089-4f6b-87c4-7958438ada7f",
                             TwoFactorEnabled = false,
                             UserName = "staff@restaurant.com"
                         },
@@ -133,7 +136,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "41b73075-dea9-4fba-9a4f-0331abd78f72",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "383a886d-a9ed-4390-8cc7-c5e975507bfb",
+                            ConcurrencyStamp = "c266cf70-83d2-4415-ba32-ba3491be279b",
                             Email = "staff@anyrestaurant.com",
                             EmailConfirmed = true,
                             FirstName = "Staff",
@@ -141,9 +144,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STAFF@ANYRESTAURANT.COM",
                             NormalizedUserName = "STAFF@ANYRESTAURANT.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGxTftG7wNfUKvsHir7m0BZgXe8+UnooWW2+3d2XehxQm4pnoRMWQL56Oqlo4w14Tg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIbo5ERhpeRzmP9tFzdsXi32pKv44OdIMyVKiALaaGLAjO1+iJklrMsl6OTBG9bqTg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b034d5cb-4838-4d07-a85f-9d6561d3bd5c",
+                            SecurityStamp = "7d816685-f6c0-49ef-969e-9144d3025f07",
                             TwoFactorEnabled = false,
                             UserName = "staff@anyrestaurant.com"
                         });
@@ -585,15 +588,15 @@ namespace AnyReservationTemp.Migrations
                             Contact = "9661 0401",
                             CustomerId = 0,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateReserved = new DateTime(2025, 2, 9, 16, 7, 1, 962, DateTimeKind.Local).AddTicks(5129),
+                            DateReserved = new DateTime(2025, 2, 9, 16, 5, 46, 971, DateTimeKind.Local).AddTicks(6419),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new TimeOnly(16, 7, 1, 962).Add(TimeSpan.FromTicks(5158)),
+                            EndTime = new TimeOnly(16, 5, 46, 971).Add(TimeSpan.FromTicks(6441)),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new TimeOnly(16, 7, 1, 962).Add(TimeSpan.FromTicks(5144)),
+                            StartTime = new TimeOnly(16, 5, 46, 971).Add(TimeSpan.FromTicks(6435)),
                             TableNo = 0
                         });
                 });
@@ -671,7 +674,7 @@ namespace AnyReservationTemp.Migrations
                             ImagePath = "/UI photos/breadboard.png",
                             Location = "21 Tampines Ave 4",
                             Name = "BreadBoard",
-                            ServiceStatus = true
+                            ServiceStatus = false
                         },
                         new
                         {
@@ -681,7 +684,7 @@ namespace AnyReservationTemp.Migrations
                             ImagePath = "/UI photos/restaurant_logo.png",
                             Location = "21 Tampines Ave 4",
                             Name = "Brewing Grounds",
-                            ServiceStatus = true
+                            ServiceStatus = false
                         },
                         new
                         {
@@ -691,7 +694,7 @@ namespace AnyReservationTemp.Migrations
                             ImagePath = "/UI photos/Wolfgang_Puck_logo.jpg",
                             Location = "21 Tampines Ave 4",
                             Name = "Wolfgang Puck",
-                            ServiceStatus = true
+                            ServiceStatus = false
                         },
                         new
                         {
@@ -701,7 +704,7 @@ namespace AnyReservationTemp.Migrations
                             ImagePath = "/UI photos/Short_Circuit_Logo.jpg",
                             Location = "21 Tampines Ave 4",
                             Name = "ShortCircuit",
-                            ServiceStatus = true
+                            ServiceStatus = false
                         },
                         new
                         {
@@ -711,7 +714,7 @@ namespace AnyReservationTemp.Migrations
                             ImagePath = "/UI photos/bisto_bar_logo.jpg",
                             Location = "21 Tampines Ave 4",
                             Name = "The Bistro Bar",
-                            ServiceStatus = true
+                            ServiceStatus = false
                         });
                 });
 

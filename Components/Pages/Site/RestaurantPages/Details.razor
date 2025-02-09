@@ -34,6 +34,15 @@
 
             <!-- Restaurant Details -->
             <h2 class="mb-3">@restaurant.Name</h2>
+            <h3>@if (restaurant.ServiceStatus)
+                {
+                    <span class="text-success">Active</span>
+                }
+                else
+                {
+                    <span class="text-danger">Out Of Service</span>
+                }
+            </h3>
             <p class="lead">@restaurant.Location</p>
 
             <hr style="width: 50%; margin: auto"/>

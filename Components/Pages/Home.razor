@@ -1,58 +1,56 @@
 ﻿@page "/"
+@using AnyReservationTemp.Data
+@using AnyReservationTemp.Domain
+@using Microsoft.EntityFrameworkCore
+
+@inject IDbContextFactory<AnyReservationTempContext> DbFactory
 
 <PageTitle>Home</PageTitle>
+
 <div class="image-container">
     <div class="text-overlay">AnyReservation</div>
 </div>
 
-<div class="marquee" style=" height: 80px; width: 100%">
-    <marquee behavior="scroll" direction="left">
-        <ul class="brand-images-marquee">
-            <li><img src="@BrandImage1" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
-            <li><img src="@BrandImage2" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
-            <li><img src="@BrandImage3" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
-            <li><img src="@BrandImage4" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
-            <li><img src="@BrandImage5" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
-            <li> <img src="@BrandImage6" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
-            <li> <img src="@BrandImage7" alt="" class="brand" style="max-width: 70px; height: auto;"></li>
-        </ul>
-    </marquee>
+<div class="marquee">
+    <div class="marquee-content">
+        @foreach (var restaurant in Restaurants)
+        {
+            <img src="@restaurant.ImagePath" alt="@restaurant.Name" class="brand">
+        }
+
+        <!-- Duplicate images for seamless looping -->
+        @foreach (var restaurant in Restaurants)
+        {
+            <img src="@restaurant.ImagePath" alt="@restaurant.Name" class="brand">
+        }
+    </div>
 </div>
 
 <body>
     <div class="button-container justify-content-center">
-        <a href="/reservations" class="glass-button bg-reserve"><span style="margin-top:100px; margin-left: 50px; color: white"></span></a>
+        <a href="/reservations" class="glass-button bg-reserve"></a>
         <a href="/restaurants" class="glass-button bg-restaurants"></a>
     </div>
 </body>
 
 <!-- Filler -->
 <div class="container-fluid d-flex flex-wrap w-100 py-2">
-    <a style="color: #fff3f1;"class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
+    <a style="color: #fff3f1;" class="btn px-4 py-2 m-2 rounded-pill" href="#">Space</a>
 </div>
 
-
 @code {
-
-    private string BrandImage1 { get; set; }
-    private string BrandImage2 { get; set; }
-    private string BrandImage3 { get; set; }
-    private string BrandImage4 { get; set; }
-    private string BrandImage5 { get; set; }
-    private string BrandImage6 { get; set; }
-    private string BrandImage7 { get; set; }
+    private List<Restaurant> Restaurants { get; set; } = new();
+    private AnyReservationTempContext context;
 
     protected override void OnInitialized()
     {
-        BrandImage1 = "/UI photos/KFC-logo.png";
-        BrandImage2 = "/UI photos/pizza-hut-logo.png";
-        BrandImage3 = "/UI photos/wendys-logo.png";
-        BrandImage4 = "/UI photos/wingstop-logo.png";
-        BrandImage5 = "/UI photos/chipotle-logo.png";
-        BrandImage6 = "/UI photos/restaurant_logo.png";
-        BrandImage7 = "/UI photos/hardees-logo.png";
+        context = DbFactory.CreateDbContext();
 
+        // Fetch restaurants with images from the database
+        Restaurants = context.Restaurant
+            .Where(r => !string.IsNullOrEmpty(r.ImagePath)) // Ensures only restaurants with an image are loaded
+            .ToList();
     }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
-
-
