@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextFactory<AnyReservationTempContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AnyReservationTempContext") ?? throw new InvalidOperationException("Connection string 'AnyReservationTempContext' not found.")));
 
+builder.Services.AddControllers();
+
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

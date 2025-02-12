@@ -2,12 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using AnyReservationTemp.Data;
 using AnyReservationTemp.Components.Entities;
+using AnyReservationTemp.Domain;
+using System.Reflection.Emit;
 
 namespace AnyReservationTemp.Data
 {
     public class AnyReservationTempContext(DbContextOptions<AnyReservationTempContext> options) : IdentityDbContext<AnyReservationTempUser>(options)
     {
         public DbSet<AnyReservationTemp.Domain.Customer> Customer { get; set; } = default!;
+        public DbSet<AnyReservationTemp.Domain.Member> Member { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.Order> Order { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.OrderDetail> OrderDetail { get; set; } = default!;
         public DbSet<AnyReservationTemp.Domain.Product> Product { get; set; } = default!;
@@ -28,12 +31,16 @@ namespace AnyReservationTemp.Data
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new CustomerSeed());
+            builder.ApplyConfiguration(new MemberSeed());
             builder.ApplyConfiguration(new StaffSeed());
             builder.ApplyConfiguration(new RestaurantSeed());
             builder.ApplyConfiguration(new ReservationSeed());
+            builder.ApplyConfiguration(new ReviewSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new UserRoleSeed());
+            
         }
+
     }
 }

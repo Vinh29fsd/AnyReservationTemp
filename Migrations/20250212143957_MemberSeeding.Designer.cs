@@ -4,6 +4,7 @@ using AnyReservationTemp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnyReservationTemp.Migrations
 {
     [DbContext(typeof(AnyReservationTempContext))]
-    partial class AnyReservationTempContextModelSnapshot : ModelSnapshot
+    [Migration("20250212143957_MemberSeeding")]
+    partial class MemberSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c4813491-bd1f-4a93-81d7-28908cd03aed",
+                            ConcurrencyStamp = "eed7a1b3-15dc-46b5-ae41-ada85f569b65",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +108,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHY+Wy1nQq43DYlOyxgnHasywkb5Qfa6L7zQidfupTBgkI74iUiF8KBdhsrMsOblpg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEESwTGuSLtkQ8H/SxQPDkj2inKl35jHEkLKExtjfXCPGohZJtUHlzHy/DwOP3OiFew==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "42c7a1ae-6cd6-45c3-ae14-e13a7d6d300a",
+                            SecurityStamp = "1370110e-2e51-440b-9b4d-4d8b5ceccfa1",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -394,14 +397,14 @@ namespace AnyReservationTemp.Migrations
                             Id = 1,
                             Contact = "9661 0401",
                             CustomerId = 0,
-                            DateReserved = new DateTime(2025, 2, 12, 22, 55, 40, 21, DateTimeKind.Local).AddTicks(3048),
+                            DateReserved = new DateTime(2025, 2, 12, 22, 39, 57, 176, DateTimeKind.Local).AddTicks(8261),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new DateTime(2025, 2, 13, 1, 55, 40, 21, DateTimeKind.Local).AddTicks(3068),
+                            EndTime = new DateTime(2025, 2, 13, 1, 39, 57, 176, DateTimeKind.Local).AddTicks(8274),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new DateTime(2025, 2, 12, 22, 55, 40, 21, DateTimeKind.Local).AddTicks(3067),
+                            StartTime = new DateTime(2025, 2, 12, 22, 39, 57, 176, DateTimeKind.Local).AddTicks(8273),
                             TableNo = 0
                         },
                         new
@@ -409,14 +412,14 @@ namespace AnyReservationTemp.Migrations
                             Id = 2,
                             Contact = "8858 6939",
                             CustomerId = 0,
-                            DateReserved = new DateTime(2025, 2, 13, 7, 55, 40, 21, DateTimeKind.Local).AddTicks(3078),
+                            DateReserved = new DateTime(2025, 2, 13, 7, 39, 57, 176, DateTimeKind.Local).AddTicks(8281),
                             EmailAddress = "owenlau@gmail.com",
-                            EndTime = new DateTime(2025, 2, 13, 10, 55, 40, 21, DateTimeKind.Local).AddTicks(3079),
+                            EndTime = new DateTime(2025, 2, 13, 10, 39, 57, 176, DateTimeKind.Local).AddTicks(8282),
                             Name = "Owen Lau",
                             NumOfCustomer = 2,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new DateTime(2025, 2, 13, 7, 55, 40, 21, DateTimeKind.Local).AddTicks(3078),
+                            StartTime = new DateTime(2025, 2, 13, 7, 39, 57, 176, DateTimeKind.Local).AddTicks(8281),
                             TableNo = 0
                         });
                 });

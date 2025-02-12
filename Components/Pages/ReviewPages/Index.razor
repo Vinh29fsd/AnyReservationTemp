@@ -3,39 +3,81 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using AnyReservationTemp.Domain
 @using AnyReservationTemp.Data
+@using AnyReservationTemp.Components.Entities
+@using Microsoft.AspNetCore.Mvc
 @implements IAsyncDisposable
 @inject IDbContextFactory<AnyReservationTemp.Data.AnyReservationTempContext> DbFactory
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h2>Index </h2>
+<h4>*</h4>
 
-<p>
-    <a href="reviews/create">Create New</a>
-</p>
+<head>
+    <link href="/bootstrap/RestaurantSelectionLayout.css" rel="stylesheet" />
+</head>
 
-<QuickGrid Class="table" Items="context.Review">
-    <PropertyColumn Property="review => review.Rating" />
-    <PropertyColumn Property="review => review.Comment" />
-    <PropertyColumn Property="review => review.ReservationId" />
-    <PropertyColumn Property="review => review.Name" />
-    <PropertyColumn Property="review => review.Contact" />
-    <PropertyColumn Property="review => review.EmailAddress" />
+<QuickGrid Class="table" Items="Restaurants">
+    <TemplateColumn Context="restaurant">
+        <div class="restaurant-card" style="display: flex; align-items: center;">
 
-    <TemplateColumn Context="review">
-        <a href="@($"reviews/edit?id={review.Id}")">Edit</a> |
-        <a href="@($"reviews/details?id={review.Id}")">Details</a> |
-        <a href="@($"reviews/delete?id={review.Id}")">Delete</a>
+            <!-- Restaurant Image -->
+            <img src="@restaurant.ImagePath" alt="Restaurant Image" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px;" />
+
+            <!-- Restaurant Information -->
+            <ul>
+                <h3>@restaurant.Name</h3>
+                <li><strong>Contact:</strong> @restaurant.Contact</li>
+                <li><strong>Email:</strong> @restaurant.EmailAddress</li>
+                <li><strong>Location:</strong> @restaurant.Location</li>
+            </ul>
+
+            <div class="restaurant-actions" style="align-self: flex-end;">
+                @if (IsStaff) {
+                <a href="@($"restaurants/edit?id={restaurant.Id}")">Edit</a>
+                <a href="@($"restaurants/delete?id={restaurant.Id}")">Remove</a>
+                 }
+            </div>
+            <div class="restaurant-actions" style="align-self: flex-end;">
+                
+                <a href="@($"restaurants/details?id={restaurant.Id}")">Details</a>
+                <a href="@($"reviews/details/{restaurant.Id}")">Reviews</a>
+                
+            </div>
+        </div>
     </TemplateColumn>
 </QuickGrid>
 
-@code {
-    private AnyReservationTempContext context = default!;
 
-    protected override void OnInitialized()
+@code {
+    private AnyReservationTempContext context;
+    private bool IsStaff { get; set; }
+    public IQueryable<Restaurant> Restaurants { get; set; }
+
+    // No constructor needed for dependency injection in Razor Components, use @inject
+    protected override async Task OnInitializedAsync()
     {
+        // Using IDbContextFactory to create the DbContext instance
         context = DbFactory.CreateDbContext();
+
+        try
+        {
+            // Fetch the list of restaurants
+            Restaurants = context.Restaurant.AsQueryable();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+            Restaurants = Enumerable.Empty<Restaurant>().AsQueryable();
+        }
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    // Dispose of the context when done
+    public async ValueTask DisposeAsync()
+    {
+        if (context != null)
+        {
+            await context.DisposeAsync();
+        }
+    }
 }

@@ -27,15 +27,21 @@
             <dd class="col-sm-10">@restaurant.EmailAddress</dd>
         </dl>
         <div>
-            <a href="@($"/restaurants/edit?id={restaurant.Id}")">Edit</a> |
+            <a href="@($"reviews/details/{restaurant.Id}")">Reviews</a>
             <a href="@($"/restaurants")">Back to List</a>
+        </div>
+        <div>
+        @if (IsStaff)
+        {
+            <a href="@($"restaurants/edit?id={restaurant.Id}")">Edit</a>
+        }
         </div>
     }
 </div>
 
 @code {
     private Restaurant? restaurant;
-
+    private bool IsStaff { get; set; }
     [SupplyParameterFromQuery]
     private int Id { get; set; }
 

@@ -4,6 +4,7 @@ using AnyReservationTemp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnyReservationTemp.Migrations
 {
     [DbContext(typeof(AnyReservationTempContext))]
-    partial class AnyReservationTempContextModelSnapshot : ModelSnapshot
+    [Migration("20250209073833_AddMembersTable")]
+    partial class AddMembersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,7 @@ namespace AnyReservationTemp.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c4813491-bd1f-4a93-81d7-28908cd03aed",
+                            ConcurrencyStamp = "25047564-eaa5-49bd-89b3-843b121cb662",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +108,9 @@ namespace AnyReservationTemp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHY+Wy1nQq43DYlOyxgnHasywkb5Qfa6L7zQidfupTBgkI74iUiF8KBdhsrMsOblpg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO+2nfJcfv/w29eBWlguc9fpNUHO6/xLsiVZKaot5PmgkIuUQX+30z45adxGsLt4cQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "42c7a1ae-6cd6-45c3-ae14-e13a7d6d300a",
+                            SecurityStamp = "c1e3a973-cb8d-44b9-b934-b403d6e0518e",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -172,6 +175,7 @@ namespace AnyReservationTemp.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MembershipLevel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -394,29 +398,14 @@ namespace AnyReservationTemp.Migrations
                             Id = 1,
                             Contact = "9661 0401",
                             CustomerId = 0,
-                            DateReserved = new DateTime(2025, 2, 12, 22, 55, 40, 21, DateTimeKind.Local).AddTicks(3048),
+                            DateReserved = new DateTime(2025, 2, 9, 15, 38, 32, 200, DateTimeKind.Local).AddTicks(3959),
                             EmailAddress = "vovinhho@gmail.com",
-                            EndTime = new DateTime(2025, 2, 13, 1, 55, 40, 21, DateTimeKind.Local).AddTicks(3068),
+                            EndTime = new DateTime(2025, 2, 9, 18, 38, 32, 200, DateTimeKind.Local).AddTicks(3973),
                             Name = "Ho Vo Vinh",
                             NumOfCustomer = 1,
                             ProgressId = 0,
                             RestaurantId = 0,
-                            StartTime = new DateTime(2025, 2, 12, 22, 55, 40, 21, DateTimeKind.Local).AddTicks(3067),
-                            TableNo = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Contact = "8858 6939",
-                            CustomerId = 0,
-                            DateReserved = new DateTime(2025, 2, 13, 7, 55, 40, 21, DateTimeKind.Local).AddTicks(3078),
-                            EmailAddress = "owenlau@gmail.com",
-                            EndTime = new DateTime(2025, 2, 13, 10, 55, 40, 21, DateTimeKind.Local).AddTicks(3079),
-                            Name = "Owen Lau",
-                            NumOfCustomer = 2,
-                            ProgressId = 0,
-                            RestaurantId = 0,
-                            StartTime = new DateTime(2025, 2, 13, 7, 55, 40, 21, DateTimeKind.Local).AddTicks(3078),
+                            StartTime = new DateTime(2025, 2, 9, 15, 38, 32, 200, DateTimeKind.Local).AddTicks(3972),
                             TableNo = 0
                         });
                 });
@@ -609,49 +598,9 @@ namespace AnyReservationTemp.Migrations
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RestaurantId");
-
                     b.ToTable("Review");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 10,
-                            Comment = "Good service!",
-                            Contact = "+65 88586939",
-                            EmailAddress = "owenlau@gmail.com",
-                            Name = "Owen",
-                            Rating = 4,
-                            ReservationId = 0,
-                            RestaurantId = 1
-                        },
-                        new
-                        {
-                            Id = 40,
-                            Comment = "Good food too!",
-                            Contact = "+65 88586939",
-                            EmailAddress = "owenlau@gmail.com",
-                            Name = "Owen",
-                            Rating = 5,
-                            ReservationId = 0,
-                            RestaurantId = 1
-                        },
-                        new
-                        {
-                            Id = 30,
-                            Comment = "bad service",
-                            Contact = "+65 72642847",
-                            EmailAddress = "tpstudent@gmail.com",
-                            Name = "tp student",
-                            Rating = 2,
-                            ReservationId = 0,
-                            RestaurantId = 2
-                        });
                 });
 
             modelBuilder.Entity("AnyReservationTemp.Domain.Staff", b =>
@@ -884,17 +833,6 @@ namespace AnyReservationTemp.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("AnyReservationTemp.Domain.Review", b =>
-                {
-                    b.HasOne("AnyReservationTemp.Domain.Restaurant", "Restaurant")
-                        .WithMany("Reviews")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Restaurant");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -944,11 +882,6 @@ namespace AnyReservationTemp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AnyReservationTemp.Domain.Restaurant", b =>
-                {
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

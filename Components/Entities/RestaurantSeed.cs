@@ -11,7 +11,14 @@ namespace AnyReservationTemp.Components.Entities
             builder.HasData(
             new Restaurant { 
             Id = 1,
-            Name = "BreadBoard",
+            Name = "Breadboard",
+            Contact = "+65 6780 4191",
+            EmailAddress = "studentservices@tp.edu.sg",
+            Location = "21 Tampines Ave 4"
+            },
+            new Restaurant { 
+            Id = 2,
+            Name = "ShortCircuit",
             Contact = "+65 6780 4191",
             EmailAddress = "studentservices@tp.edu.sg",
             Location = "21 Tampines Ave 4"
